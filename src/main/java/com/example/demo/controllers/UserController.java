@@ -18,7 +18,7 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<URI> addUser(@RequestBody User user){
+    public ResponseEntity<User> addUser(@RequestBody User user){
         userRepository.save(user);
 
         URI location = ServletUriComponentsBuilder
@@ -27,7 +27,7 @@ public class UserController {
                 .buildAndExpand(user.getFirstName())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(user);
     }
 
     @GetMapping
@@ -73,7 +73,7 @@ public class UserController {
         if(change){
             userRepository.save(updatedUser);
         return updatedUser;
-        } else {throw new RuntimeException("All fields are empty or null...");}
+        } else {throw new RuntimeException("All fields are empty or invalid...");}
     }
 
     @DeleteMapping("/{id}")
