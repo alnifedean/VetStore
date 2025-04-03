@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@Table(schema = "usersTables")
+@Table(name = "user")
 @Entity
 public class User {
 
@@ -13,17 +13,20 @@ public class User {
     private long id;
 
     @NotBlank(message = "The firs name can not be empty or null")
-    @Column
+    @Column(length = 50)
     private String firstName;
     @NotBlank(message = "The last name can not be empty or null")
-    @Column
+    @Column(length = 50)
     private String lastName;
     @Email(message = "The email need to be valid")
-    @Column
+    @Column(length = 50)
     private String email;
     @NotBlank(message = "The phone can not be empty or null")
-    @Column
+    @Column(length = 15)
     private String phone;
+    @NotBlank(message = "The password can not be empty or null")
+    @Column(length = 100)
+    private String password;
 
 
     public long getId() {
@@ -56,5 +59,12 @@ public class User {
     }
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

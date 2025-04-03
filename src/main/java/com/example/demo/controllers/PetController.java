@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pet")
+@RequestMapping("pet")
 public class PetController {
 
     @Autowired
@@ -37,10 +37,14 @@ public class PetController {
     }
 
     @GetMapping
-    public List<Pet> getAllPets(){
-        if(petRepository.findAll().isEmpty()){throw new RuntimeException("No pets");}
-        return petRepository.findAll();
+    public ResponseEntity<List<Pet>> getAllPets() {
+        List<Pet> pets = petRepository.findAll();
+        if (pets.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(pets);
     }
+
 
     @GetMapping("/{id}")
     public Pet getPet(@PathVariable Long id){

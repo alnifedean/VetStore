@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "petTable")
+@Table(name = "pet_table")
 public class Pet {
 
     @Id
@@ -20,9 +20,11 @@ public class Pet {
     @NotBlank
     @Column
     private Integer ageYears;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Pet(){}
 
     public Pet(Long id, String name, String breed, Integer ageYears) {
         this.id = id;

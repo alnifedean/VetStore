@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5174")
 public class UserController {
 
     @Autowired
@@ -48,6 +49,7 @@ public class UserController {
         updatedUser.setLastName(user.getLastName());
         updatedUser.setEmail(user.getEmail());
         updatedUser.setPhone(user.getPhone());
+        updatedUser.setPassword(user.getPassword());
         userRepository.save(updatedUser);
         return updatedUser;
     }
@@ -68,6 +70,9 @@ public class UserController {
             change=true;}
         if(!user.getPhone().isEmpty() && user.getPhone() != null){
             updatedUser.setPhone(user.getPhone());
+            change=true;}
+        if(!user.getPassword().isEmpty() && user.getPassword() != null){
+            updatedUser.setPassword(user.getPassword());
             change=true;}
 
         if(change){
