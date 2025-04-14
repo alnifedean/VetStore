@@ -5,8 +5,6 @@
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-
-  
   width: 400px;
   height: 400px;
   border: 2px solid #fff;
@@ -20,11 +18,10 @@
   text-align: center;
   font-size: 20px;
   margin-top: 15px;
+  height: 300px;
 }
 
-h2{
-  margin: 0;
-}
+.titleContainerH2{margin: auto;}
 
 .formContainer{
   display: flex;
@@ -34,20 +31,41 @@ h2{
   margin-bottom: 5px;
 }
 
-.formContainer label{
+.formContainerLabel{
   align-self: flex-start;
   margin-left: 5px;
 }
 
-.formContainer input{
+.formContainerInput{
   width: 95%;
   height: auto;
   margin-bottom: 5px;
 }
 
-button{
+.mainContainerButton{
   border: 1px solid #fff;
   border-radius: 5px;
   margin-bottom: 10px;
   width: 60%;
+  height: 200px;
+  background-color: black;
+}
+
+.mainContainerButton:hover{
+  border: 1px solid #00f;
+  color: #aaa;
+  cursor: pointer;
+  box-shadow: 0 0 2px 0px #00f;
+}
+
+.mainContanierA{
+  color: #00f;
+  display: inline-block;
+  cursor: pointer;
+  margin: 3px;
+  text-decoration: none;
+}
+
+.mainContanierA:hover{
+  transform: scale(1.2);
 }
