@@ -5,12 +5,12 @@
   background-repeat: no-repeat;
   background-position: 0 120px;
   background-attachment: fixed;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
   background-blend-mode: overlay;
 }
 
 .homeHero{
-  margin-top: 230px;
+  margin-top: 200px;
   height: 330px;
   width: 80%;
   background-color: #242424;
@@ -25,6 +25,7 @@
   height: 330px;
   width: 80%;
   margin-bottom: 30px;
+  margin-top: 10px;
   background-color: #242424;
   border-radius: 5px;
   display: flex;

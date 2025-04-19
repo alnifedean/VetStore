@@ -18,6 +18,10 @@
   height: 100%;
 }
 
+.logoContainerH1{
+  font-size: 65px;
+}
+
 .logoContainerLink{
   height: 100%;
   width: 80%;

@@ -1,12 +1,10 @@
 .mainContainer{
   height: auto;
-  margin-top: 152px;
+  margin-top: 125px;
   display: flex;
   flex-direction: column;
 }
 
 .routesContainer{
-  height: 1800px;
-  flex: 1;
-  background-color: greenyellow;
+  height: auto;
 }
