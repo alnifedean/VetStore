@@ -13,12 +13,13 @@
   margin-top: 200px;
   height: 330px;
   width: 80%;
-  background-color: #242424;
+  background-color: #aaa;
   border-radius: 5px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: row;
+  color: #242424;
 }
 
 .homeInfo{
@@ -26,12 +27,13 @@
   width: 80%;
   margin-bottom: 30px;
   margin-top: 10px;
-  background-color: #242424;
+  background-color: #aaa;
   border-radius: 5px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: row;
+  color: #242424;
 }
 
 .homeInfoImg{

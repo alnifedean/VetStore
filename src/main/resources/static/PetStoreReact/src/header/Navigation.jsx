@@ -18,8 +18,8 @@ const Navigation = () => {
         </div>
         
         <div className={styles.userAction}>
-          <Link className={styles.userActionLinkSingIn} >Sign in</Link>
-          <Link className={styles.userActionLinkLogin} >Login</Link>
+          <Link className={styles.userActionLinkSingIn} to={'/register'}  >Sign in</Link>
+          <Link className={styles.userActionLinkLogin} to={'/login'} >Login</Link>
         </div>
       </div>
 

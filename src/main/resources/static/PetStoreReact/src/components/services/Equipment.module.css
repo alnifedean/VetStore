@@ -1,0 +1,67 @@
+.equipmentContainer{
+  background-color: aqua;
+  margin: 10px 0 20px 0;
+  height: 72vh;
+  width: 90%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.infoContainer{
+  background-color: red;
+  height: 95%;
+  width: 63%;
+}
+.buttonContact{
+  background-color: gray;
+  color: azure;
+  display: flex;
+  align-self: flex-end;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 0;
+  height: 38px;
+  width: 150px;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+
+
+
+.imagesContainer{
+  width: 32%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.imagesBox{
+  background-color: greenyellow;
+  height: 86%;
+  width: 100%;
+  border-radius: 7px;
+}
+.buttonsBox{
+  background-color: greenyellow;
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.buttonImage{
+  width: 40%;
+  height: 100%;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}

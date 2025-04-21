@@ -5,6 +5,8 @@ import Navigation from './header/Navigation';
 import Services from './components/Services';
 import Gallery from './components/Gallery';
 import Contact from './components/Contact';
+import Training from './components/services/Training';
+import Equipment from './components/services/Equipment';
 
 
 const HomeContainer = () =>{
@@ -15,9 +17,10 @@ const HomeContainer = () =>{
         <Routes>
           <Route path='/home' element={<Home />}/>
           <Route path='/' element={<Home />}/>
-          <Route path='/services' element={<Services />}/>
+          <Route path="/services" element={<Services />}/>
           <Route path='/gallery' element={<Gallery />}/>
           <Route path='/contact' element={<Contact />}/>
+          <Route path='/equipment' element={<Equipment />}/>
         </Routes>
       </div>
     </div>
