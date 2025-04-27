@@ -45,10 +45,18 @@ public class PetController {
         return ResponseEntity.ok(pets);
     }
 
-
     @GetMapping("/{id}")
     public Pet getPet(@PathVariable Long id){
         return petRepository.findById(id).orElseThrow(() -> new RuntimeException("Pet not found..."));
+    }
+
+    @GetMapping("/all/{id}")
+    public ResponseEntity<List<Pet>> getPetsById(@PathVariable Long id){
+        List<Pet> pets = petRepository.findByUserId(id);
+        if (pets.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(pets);
     }
 
     @PutMapping

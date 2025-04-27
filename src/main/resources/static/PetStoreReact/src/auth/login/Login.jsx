@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Login.module.css'
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import icon from '../../UI/images/imagen2.png'
 const Login = () => {
 
   const [data, setData] = useState({
@@ -9,8 +9,15 @@ const Login = () => {
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-
+  const signed = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (signed !== null) {
+      navigate('/dashboard');
+    }
+  }, []);
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -34,7 +41,6 @@ const Login = () => {
 
           localStorage.setItem('token', responseData.token);
           localStorage.setItem('user', JSON.stringify(responseData.user));
-
           navigate('/dashboard');
         } else {
           alert('Login unsuccessful...');
@@ -49,11 +55,12 @@ const Login = () => {
 
   return(
     <>
+      <div className={styles.homeBtn}><img className={styles.homeBtnImg} src={icon} alt="home" onClick={()=>navigate('/home')} /></div>
       {!isLoading &&
       <div className={styles.mainContainer}>
         <div className={styles.subContainer}>
-          <h2 className={styles.subContainerH2}> Sign In</h2>
-          <form onSubmit={handleSubmit}>
+          <h2 className={styles.subContainerH2}> Login!!</h2>
+          <form onSubmit={handleSubmit} className={styles.subContainerForm}>
             <div className={styles.inputs}>
               <label>Email</label>
               <input type="text" className={styles.inputsInput} name="email" value={data.email} placeholder='email@email.com...' onChange={handleChange} />
@@ -61,7 +68,7 @@ const Login = () => {
               <label>Password</label>
               <input type="password" className={styles.inputsInput} name="password" value={data.password} placeholder='password...' onChange={handleChange} />
             </div>
-            <button className={styles.subContainerButton}>Log in!</button>
+            <button className={styles.subContainerButton}>Sign in!</button>
           </form>
         </div>
         <p>New here? <Link to={'/register'} className={styles.mainContanierA}>Create account!</Link></p>

@@ -1,5 +1,5 @@
 import styles from './Gallery.module.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import guard from '../UI/images/pictures/escritorioCachorro.png'
 import adi from '../UI/images/pictures/adiestramiento.png'
 import clas from '../UI/images/pictures/claseGente.png'
@@ -19,33 +19,26 @@ const Gallery = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return(
-    data===''? (<div className={styles.mainContainer} >
-      <div className={styles.row}>
-        <div className={styles.imageContainer}><img className={styles.image} src={guard} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={adi} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={clas} onClick={handleImageClick} /></div>
-      </div>
-
-      <div className={styles.row}>
-        <div className={styles.imageContainer}><img className={styles.image} src={hotel} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={cupi} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={food} onClick={handleImageClick} /></div>
-      </div>
-
-      <div className={styles.row}>
-        <div className={styles.imageContainer}><img className={styles.image} src={equi} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={vet} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={guard} onClick={handleImageClick} /></div>
-      </div>
-
-      <div className={styles.row}>
-        <div className={styles.imageContainer}><img className={styles.image} src={adi} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={clas} onClick={handleImageClick} /></div>
-        <div className={styles.imageContainer}><img className={styles.image} src={hotel} onClick={handleImageClick} /></div>
-      </div>
-      
-    </div>):(
+    data===''? (
+      <div className={styles.box}>
+        <img className={styles.image} src={adi} onClick={handleImageClick} />
+        <img className={styles.image} src={cupi} onClick={handleImageClick} />
+        <img className={styles.image} src={adi} onClick={handleImageClick} />
+        <img className={styles.image} src={guard} onClick={handleImageClick} />
+        <img className={styles.image} src={vet} onClick={handleImageClick} />
+        <img className={styles.image} src={clas} onClick={handleImageClick} />
+        <img className={styles.image} src={hotel} onClick={handleImageClick} />
+        <img className={styles.image} src={food} onClick={handleImageClick} />
+        <img className={styles.image} src={equi} onClick={handleImageClick} />
+        <img className={styles.image} src={guard} onClick={handleImageClick} />
+        <img className={styles.image} src={clas} onClick={handleImageClick} />
+        <img className={styles.image} src={hotel} onClick={handleImageClick} />
+      </div>):(
       <div className={styles.singleImageContainer}>
       <button className={styles.buttonClose} onClick={()=>{setData(''), window.scrollTo({ top: 0, behavior: 'smooth' });}}>X</button>
       <img className={styles.singleImage} src={data} alt="Imagen seleccionada" />

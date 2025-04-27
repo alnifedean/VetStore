@@ -3,7 +3,7 @@
   background-image: url('../UI/images/pictures/ranaMain.png');
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: 0 120px;
+  background-position: 0 125px;
   background-attachment: fixed;
   background-color: rgba(0, 0, 0, 0.2);
   background-blend-mode: overlay;
@@ -54,4 +54,33 @@
 
 .homeInfoImage{
   width: 100%;
+}
+
+@media (max-width: 768px){
+  .homeHero{
+    width: 80%;
+    height: auto;
+    border-radius: 15px;
+    flex-direction: column;
+    padding: 20px 0;
+  }
+
+  .homeInfoTxt{
+    width: 90%;
+    font-size: 1.2rem;
+  }
+  .homeInfoImg{
+    width: 70%;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .homeInfo{
+    width: 80%;
+    height: auto;
+    border-radius: 15px;
+    flex-direction: column;
+    padding: 20px 0;
+    margin-top: 20px;
+  }
 }

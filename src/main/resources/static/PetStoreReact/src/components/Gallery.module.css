@@ -1,34 +1,14 @@
-.mainContainer{
-  margin: 15px 0;
-  height: 100%;
-  height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.row{
-  margin-bottom: 15px;
-  height: 308px;
-  width: 90%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.imageContainer{
-  height: 300px;
-  width: 320px;
-  overflow: hidden;
-  border-radius: 5px;
-  cursor: pointer;
-  overflow: hidden;
+.box{
+  margin: 15px;
+  width: 95%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .image{
-  height: 100%;
+  width: 100%;
+  height: auto;
   border-radius: 5px;
 }
 
@@ -65,4 +45,16 @@
   height: 33px;
   width: 33px;
   box-shadow: 0 0 10px 0 #fffa;
+}
+
+@media (max-width: 768px) {
+  .box{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 481px){
+  .box{
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

@@ -1,0 +1,103 @@
+.modalContainer {
+  background-color: #fff;
+  height: 400px;
+  width: 900px;
+  z-index: 100;
+  position: fixed;
+  top: 62%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 15px;
+}
+
+.formContainer{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputsContainer{
+  margin: 15px;
+  height: 94%;
+  width: 60%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.inputsH2{
+  background-color: #888;
+  height: 20%;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-size: 2rem;
+}
+
+.inputs{
+  height: 70%;
+  width: 90%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.inputsEach{
+  width: 100%;
+  height: 1.3rem;
+  background-color: #fff;
+  border: 2px solid #999;
+  color: #000;
+}
+
+.labels{
+  margin-bottom: -10px;
+  font-size: 1.2rem;
+  align-self: start;
+  color: black;
+}
+
+.imageContainer{
+  height: 94%;
+  width: 39%;
+  margin: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.imageInputDiv{
+  background-color: #999;
+  width: 100%;
+  height: 85%;
+  border-radius: 10px;
+}
+
+.imageInput{
+  background-color: #fff;
+  height: 90%;
+  width: 90%;
+  border-radius: 150px;
+}
+
+.imageBtn{
+  background-color: #888;
+  width: 100%;
+  height: 13%;
+  border-radius: 10px;
+  font-size: 1.4rem;
+}
+
+
+
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.75);
+}

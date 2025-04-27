@@ -1,0 +1,93 @@
+.petsContainer{
+  background-color: #fffe;
+  width: 80%;
+  margin: 15px 0;
+  border-radius: 15px;
+  color: black;
+  display: flex;
+}
+
+.petsTitle{
+  background-color: #fffe;
+  width: 95%;
+  height: 60px;
+  margin: 15px 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 5px solid #888;
+  font-size: 2rem;
+}
+
+.petsAddBtn{
+  background-color: #fffe;
+  width: 95%;
+  height: 40px;
+  margin: 15px 0;
+  border-radius: 10px;
+  border: 5px solid #888;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.petsAddText{
+  height: 45px;
+  width: 240px;
+  margin: 0 15px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: start;
+}
+
+.petsAddPlus{
+  background-color: #888;
+  width: 90px;
+  height: 23px;
+  margin: 0 15px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 50px;
+  display: flex;
+  text-align: center;
+  justify-self: center;
+}
+
+.petRowTitle{
+  width: 95%;
+  height: 50px;
+  margin-bottom: 5px;
+  border-bottom: 2px solid #888;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.petRow{
+  width: 95%;
+  height: 50px;
+  margin-bottom: 5px;
+  border-bottom: 2px solid #888;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.iconTrash{
+  width: 30px;
+  height: 30px;
+}
+
+@media (max-width: 481px){
+  .petsAddText{
+    font-size: 1.2rem;
+  }
+  .petRowTxt{
+    display: none;
+  }
+}

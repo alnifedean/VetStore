@@ -17,4 +17,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  overflow-y: scroll;
+  min-width: 344px;
 }

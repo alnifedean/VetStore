@@ -8,9 +8,8 @@ import food from '../UI/images/pictures/alimento.png'
 import equi from '../UI/images/pictures/articulos.png'
 import vet from '../UI/images/pictures/vet.png'
 import Modal from '../UI/Modal'
-import { Link, Outlet } from 'react-router-dom';
-import { useState } from 'react';
-
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 
 const Services = () => {
@@ -26,21 +25,25 @@ const Services = () => {
     setOpenService(null)
   };
 
+  useEffect(() => {
+      window.scrollTo(0, 0);
+  }, []);
+
   return(
     <>
       <div className={styles.servicesContainer}>
         <Link className={styles.serviceRows} style={{backgroundColor: '#7fb3d5'}} onClick={() => modalHandler('Adiestramiento')} >
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={adi} alt="Perrito siendo adiestrado" /></div>
           <div className={styles.serviceRowTxt}>
-            <h2>Adiestramiento</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>Training</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
         </Link>
 
         <Link className={styles.serviceRows} style={{backgroundColor: '#f1948a'}} onClick={() => modalHandler('Guarderia')}>
           <div className={styles.serviceRowTxt}>
-            <h2>Guarderia</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>DayCare</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={guard} alt="Perrito en guarderia" /></div>
         </Link>
@@ -48,15 +51,15 @@ const Services = () => {
         <Link className={styles.serviceRows} style={{backgroundColor: '#f9e79f'}} onClick={() => modalHandler('Clases')}>
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={clas} alt="imagen con perritos en clase" /></div>
           <div className={styles.serviceRowTxt}>
-            <h2>Clases</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>Classes</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
         </Link>
 
         <Link className={styles.serviceRows} style={{backgroundColor: '#82e0aa'}} onClick={() => modalHandler('Hotel')}>
           <div className={styles.serviceRowTxt}>
-            <h2>Hotel perruno</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>Hotel</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={hotel} alt="Perrito durmiendo en hotel perruno" /></div>
         </Link>
@@ -64,15 +67,15 @@ const Services = () => {
         <Link className={styles.serviceRows} style={{backgroundColor: '#c39bd3'}} onClick={() => modalHandler('Cupido')}>
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={cupi} alt="Imagen de dos perritos que se aman" /></div>
           <div className={styles.serviceRowTxt}>
-            <h2>Cupido</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>Cupid</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
         </Link>
 
         <Link className={styles.serviceRows} style={{backgroundColor: '#eb984e'}} onClick={() => modalHandler('Alimento')}>
           <div className={styles.serviceRowTxt}>
-            <h2>Alimento</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>Food</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={food} alt="comida organica barf" /></div>
         </Link>
@@ -80,15 +83,15 @@ const Services = () => {
         <Link className={styles.serviceRows} style={{backgroundColor: '#85c1e9'}} onClick={() => modalHandler('Equipo')}>
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={equi} alt="Equipo de entrenamiento" /></div>
           <div className={styles.serviceRowTxt}>
-            <h2>Equipo</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>Equipment</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
         </Link>
 
         <Link className={styles.serviceRows} style={{backgroundColor: '#48c9b0'}} onClick={() => modalHandler('Vet')}>
           <div className={styles.serviceRowTxt}>
-            <h2>Veterinario</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
+            <h2>Veterinary</h2>
+            <p className={styles.serviceTxtP}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur.</p>
           </div>
           <div className={styles.serviceRowImg}><img className={styles.serviceRowImgInt} src={vet} alt="Perrito feliz en veterinaria" /></div>
         </Link>

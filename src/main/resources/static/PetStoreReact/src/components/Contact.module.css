@@ -88,3 +88,58 @@
   margin: 0;
   border-radius: 10px;
 }
+
+@media (max-width: 1050px){
+  .informationH2{
+    font-size: 2.5rem;
+    width: 100%;
+  }
+  .informationMess{
+    font-size: 1.3rem;
+    width: 100%;
+  }
+  .informationP{
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px){
+  .mainContainer{
+  width: 60%;
+  height: auto;
+  margin-top: 20px;
+  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  border-radius: 10px;
+  color: black;
+  
+  }
+  .informationContainer{
+    width: 95%;
+    border-right: none;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #0007;
+    padding-bottom: 10px;
+  }
+  .formContainer{
+    width: 95%;
+    border-right: none;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #0007;
+    padding-bottom: 10px;
+  }
+  .mapContainer{
+    width: 95%;
+    border-right: none;
+    height: 300px;
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width: 481px){
+  .mainContainer{
+    width: 80%;
+  }
+}

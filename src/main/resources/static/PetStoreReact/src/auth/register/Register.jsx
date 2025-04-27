@@ -1,6 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
 import styles from './Register.module.css'
-import { useState } from 'react';
+import icon from '../../UI/images/imagen2.png'
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Register = () => {
 
@@ -12,11 +13,18 @@ const Register = () => {
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
+  const signed = localStorage.getItem("token");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  useEffect(() => {
+    if (signed !== null) {
+      navigate('/dashboard');
+    }
+  }, []);
+
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
@@ -48,6 +56,7 @@ const Register = () => {
 
   return (
     <>
+    <div className={styles.homeBtn}><img className={styles.homeBtnImg} src={icon} alt="home" onClick={()=>navigate('/home')} /></div>
     {!isLoading && 
       <>
         <form className={styles.mainContainer} onSubmit={handleSubmit}>
@@ -72,7 +81,7 @@ const Register = () => {
           </div>
           <button className={styles.mainContainerButton} type="submit">Submit</button>
         </form>
-        <p>Have an account? <Link className={styles.mainContanierA} to={'/login'}>Sign in!</Link></p>
+        <p>Have an account? <Link className={styles.mainContanierA} to={'/login'}>Login!</Link></p>
       </>
     }
     {isLoading && <div>Loading...</div>}

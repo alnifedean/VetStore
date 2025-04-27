@@ -1,0 +1,102 @@
+.links{
+  background-color: #eee;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 40%;
+  display: flex;
+}
+
+.link{
+  color: black;
+  text-decoration: none;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.close{
+  position: fixed;
+  color: black;
+  width: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  margin: 15px;
+}
+
+.hamburgerMenuIcon{
+  height: 37px;
+  margin-right: 50px;
+}
+
+.userActionLinks{
+  width: 100%;
+}
+
+.userAction{
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 50px;
+}
+
+.userActionLinkSingIn{
+  color: black;
+  text-decoration: none;
+}
+.userActionLinkLogin{
+  color: black;
+  text-decoration: none;
+}
+
+.userActionLinkSingOut{
+  color: black;
+  text-decoration: none;
+  margin-top: 15px;
+}
+
+.userActionLinkSingIn:hover{
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.userActionLinkLogin:hover{
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.userActionLinkSingOut:hover{
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.hamburgerMenuIcon:hover{
+  height: 40px;
+}
+
+.link:hover{
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.close:hover{
+  font-size: 1.7rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (min-width: 768px){
+  .hamburgerMenuIcon{
+    display: none;
+  }
+
+  .links{
+    display: none;
+  }
+
+  .close{
+    display: none;
+  }
+}
