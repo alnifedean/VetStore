@@ -1,0 +1,124 @@
+.mainContainer{
+  background-color: #ffc0cb;
+  height: auto;
+  width: 100%;
+}
+
+.title{
+  background-color: #fffe;
+  width: 80%;
+  height: 70px;
+  padding: 0;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 4px solid #FFA07A;
+  color: #FFA07A;
+  font-size: 2.5rem;
+}
+
+.box{
+  margin: 15px;
+  width: 95%;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
+  gap: 10px;
+}
+
+.imageContainer{
+  background-color: #fffe;
+  width: 96%;
+  height: auto;
+  border-radius: 15px;
+  padding: 5px;
+}
+
+.image{
+  height: 70%;
+  max-width: 90%;
+}
+
+.imageTxt{
+  width: 85%;
+  height: 50px;
+  margin: 0;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.imageContainer:hover{
+  background-color: #FFA07A;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.homeBtn{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 60px;
+  margin-top: 20px;
+  display: flex;
+  align-items: start;
+}
+
+.homeBtnImg{
+  background-color: #FFA07A;
+  height: 60px;
+  width: 60px;
+  padding: 0 25px 0 15px;
+  border-radius: 0 50px 50px 0;
+  box-shadow: 0 0 10px 0 #fff;
+}
+
+.homeBtnImg:hover{
+  padding: 0 25px 0 25px;
+  box-shadow: 0 0 10px 2px #fff;
+}
+
+@media (max-width: 1025px){
+  .mainContainer{
+    background-color: #ffc0cb;
+    height: 100%;
+    width: 100%;
+    padding-top: 60px;
+  }
+  .title{
+    font-size: 2rem;
+  }
+}
+@media (max-width: 768px){
+  .mainContainer{
+    padding-top: 65px;
+  }
+  .box{
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .title{
+    font-size: 1.5rem;
+    width: 90%;
+  }
+}
+@media (max-width: 481px){
+  .mainContainer{
+    margin-top: 60px;
+    background-color: #ffc0cb;
+    height: 100%;
+    width: 100%;
+    padding-top: 120px;
+  }
+  .title{
+    margin-top: 120px;
+    font-size: 1.4rem;
+  }
+  .box{
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

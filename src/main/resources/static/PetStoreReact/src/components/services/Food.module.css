@@ -1,5 +1,5 @@
 .equipmentContainer{
-  background-color: aqua;
+  background-color: #fffe;
   margin: 10px 0 20px 0;
   height: 72vh;
   width: 90%;
@@ -9,12 +9,13 @@
   justify-content: space-evenly;
 }
 .infoContainer{
-  background-color: red;
+  background-color: #242424;
+  border-radius: 10px;
   height: 95%;
   width: 63%;
 }
 .buttonContact{
-  background-color: gray;
+  background-color: #808080;
   color: azure;
   display: flex;
   align-self: flex-end;
@@ -29,6 +30,11 @@
   font-size: 1.1rem;
   font-weight: 600;
 }
+.buttonContact:hover{
+  background-color: #666;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
 
 
 
@@ -41,19 +47,20 @@
   justify-content: space-between;
 }
 .imagesBox{
-  background-color: greenyellow;
+  background-color: #242424;
   height: 86%;
   width: 100%;
-  border-radius: 7px;
+  border-radius: 10px;
 }
 .buttonsBox{
-  background-color: greenyellow;
+  background-color: #242424;
   height: 10%;
   width: 100%;
   display: flex;
   align-items: center;
   flex-direction: row;
   justify-content: space-around;
+  border-radius: 5px;
 }
 .buttonImage{
   width: 40%;
@@ -64,4 +71,61 @@
   border-radius: 5px;
   border: none;
   cursor: pointer;
+}
+.buttonImage:hover{
+  background-color: #666;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+@media (max-width: 1025px){
+  .infoContainer{
+    justify-content: space-evenly;
+  }
+  .infoContainerH2{
+    margin: 0;
+  }
+  .infoContainerP{
+    margin: 0;
+  }
+}
+@media (max-width: 768px){
+  .equipmentContainer{
+    background-color: #fffe;
+    margin: 10px 0 20px 0;
+    height: auto;
+    width: 70%;
+    flex-direction: column;
+  }
+  .infoContainer{
+    width: 95%;
+    margin-top: 15px;
+    background-color: transparent;
+    color: #242424;
+  }
+  .buttonContact{
+    width: 70%;
+    margin: 15px 0;
+  }
+
+
+  .imagesContainer{
+    padding-top: 20px;
+    width: auto;
+    min-width: 85%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .buttonsBox{
+    background-color: transparent;
+    margin: 15px 0;
+    height: 40px;
+  }
+}
+@media (max-width: 481px){
+  .equipmentContainer{
+    width: 90%;
+  }
 }

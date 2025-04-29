@@ -2,6 +2,8 @@ package com.example.demo.controllers;
 
 import com.example.demo.model.User;
 import com.example.demo.respository.UserRepository;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> addUser(@RequestBody User user){
+
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        String hashedPassword = argon2.hash(1, 1024, 1, user.getPassword());
+        user.setPassword(hashedPassword);
+
         userRepository.save(user);
 
         URI location = ServletUriComponentsBuilder

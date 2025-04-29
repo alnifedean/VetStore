@@ -11,16 +11,16 @@ const Hotel = () =>{
   return(
     <div className={styles.equipmentContainer}>
       <div className={styles.infoContainer}>
-        <h2>Hotel</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias nihil similique ducimus illum aspernatur sapiente voluptas adipisci commodi dolor! Aliquid obcaecati nostrum repellendus. Saepe, deserunt quasi quo dolorem possimus molestiae porro sint repellendus odio laudantium itaque dolorum molestias est. Maxime similique, nesciunt iure consequuntur voluptate repellat excepturi placeat nulla sunt aliquam cumque saepe animi porro quo est reiciendis? Quisquam maxime asperiores eum illo ut sequi voluptatum, dolorum sapiente itaque exercitationem odit laudantium, quia, sunt nostrum repudiandae possimus labore laboriosam? Inventore in eveniet nobis quo nisi labore similique, veniam maxime et illum exercitationem itaque ipsam deserunt aliquid cupiditate voluptates assumenda reprehenderit?</p>
-        <Link className={styles.buttonContact} to={'/contact'} >Contacto</Link>
+        <h2 className={styles.infoContainerH2}>Hotel</h2>
+        <p className={styles.infoContainerP}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias nihil similique ducimus illum aspernatur sapiente voluptas adipisci commodi dolor! Aliquid obcaecati nostrum repellendus. Saepe, deserunt quasi quo dolorem possimus molestiae porro sint repellendus odio laudantium itaque dolorum molestias est. Maxime similique, nesciunt iure consequuntur voluptate repellat excepturi placeat nulla sunt aliquam cumque saepe animi porro quo est reiciendis? Quisquam maxime asperiores eum illo ut sequi voluptatum, dolorum sapiente itaque exercitationem odit laudantium, quia, sunt nostrum repudiandae possimus labore laboriosam? Inventore in eveniet nobis quo nisi labore similique, veniam maxime et illum exercitationem itaque ipsam deserunt aliquid cupiditate voluptates assumenda reprehenderit?</p>
+        <Link className={styles.buttonContact} to={'/contact'} >Contact</Link>
       </div>
 
       <div className={styles.imagesContainer}>
         <div className={styles.imagesBox}></div>
         <div className={styles.buttonsBox}>
-          <button className={styles.buttonImage}>Anterior</button>
-          <button className={styles.buttonImage}>Siguiente</button>
+          <button className={styles.buttonImage}>Last</button>
+          <button className={styles.buttonImage}>Next</button>
         </div>
       </div>
     </div>
