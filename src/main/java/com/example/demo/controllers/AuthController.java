@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.model.User;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.respository.UserRepository;
+import com.example.demo.utils.JWTUtil;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,10 @@ import java.util.Optional;
 public class AuthController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @PostMapping(value = "/login")
     public ResponseEntity<Object> login(@RequestBody User user) {
@@ -33,14 +37,19 @@ public class AuthController {
             String hashedPassword = authUser.getPassword();
             boolean userVerified = argon2.verify(hashedPassword, user.getPassword().toCharArray());
 
-            return ResponseEntity.ok(new AuthResponse(authUser, "fixed-token-12345"));
+            if (userVerified){
+
+                String token = jwtUtil.create(String.valueOf(authUser.getId()), authUser.getEmail());
+
+                return ResponseEntity.ok(new AuthResponse(authUser, token));
+            } else {
+                return ResponseEntity.status(401).body("FAIL");
+            }
+
+
         }
         return ResponseEntity.status(401).body("FAIL");
     }
-
-
-
-
 }
 
 

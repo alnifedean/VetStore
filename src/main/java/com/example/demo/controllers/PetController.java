@@ -4,6 +4,7 @@ import com.example.demo.model.Pet;
 import com.example.demo.model.User;
 import com.example.demo.respository.PetRepository;
 import com.example.demo.respository.UserRepository;
+import com.example.demo.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,8 @@ public class PetController {
     PetRepository petRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JWTUtil jwtUtil;
 
     @PostMapping("/{id}")
     public ResponseEntity<Pet> addPet(@RequestBody Pet pet, @PathVariable Long id){
@@ -50,9 +53,12 @@ public class PetController {
         return petRepository.findById(id).orElseThrow(() -> new RuntimeException("Pet not found..."));
     }
 
-    @GetMapping("/all/{id}")
-    public ResponseEntity<List<Pet>> getPetsById(@PathVariable Long id){
-        List<Pet> pets = petRepository.findByUserId(id);
+    @GetMapping("/all")
+    public ResponseEntity<List<Pet>> getPetsById(@RequestHeader(value = "Authorization") String token){
+
+        long userId = Long.parseLong(jwtUtil.getKey(token));
+
+        List<Pet> pets = petRepository.findByUser_Id(userId);
         if (pets.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -91,9 +97,15 @@ public class PetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePet(@PathVariable Long id){
+    public ResponseEntity<String> deletePet(@PathVariable Long id, @RequestHeader(value = "Authorization") String token){
+        long userId = Long.parseLong(jwtUtil.getKey(token));
         Pet deletedPet = petRepository.findById(id).orElseThrow(() -> new RuntimeException("Pet not found..."));
-        petRepository.delete(deletedPet);
-        return ResponseEntity.ok("Pet deleted...");
+
+        if(userId==deletedPet.getUserId()){
+            petRepository.delete(deletedPet);
+            return ResponseEntity.ok("Pet deleted...");
+        } else {
+            throw new RuntimeException("All fields are empty or invalid...");
+        }
     }
 }

@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [pets, setPets] = useState([]);
   const [newPet, setNewPet] = useState(null);
+  const [noPet, setNoPet] = useState(false);
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
   const navigate = useNavigate();
   const signed = localStorage.getItem("token");
@@ -34,16 +35,20 @@ const Dashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/system/api/v1/pet/all/${userId}`, {
+        `http://localhost:8080/system/api/v1/pet/all`, {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") }
         });
         if (!response.ok) {
           throw new Error("response not ok!!");
         }
 
         const petsData = await response.json();
+        if (!petsData || petsData.length === 0) { 
+          setNoPet(true);
+      } else {
         setPets(petsData);
+      }
     } catch (error) {
       console.error('Error:', error);
       alert('Error connecting to the server');
@@ -51,6 +56,8 @@ const Dashboard = () => {
       setIsLoading(false);
     }
   };
+
+
 
   const deleteDog = async (petId) => {
 
@@ -62,14 +69,13 @@ const Dashboard = () => {
     try {
       const response = await fetch(`http://localhost:8080/system/api/v1/pet/${petId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") }
       });
 
       if (!response.ok) {
         throw new Error("Failed to delete pet");
       }
       setPets(prevPets => prevPets.filter(pet => pet.id !== petId));
-
 
     } catch (error) {
       console.error('Error:', error);
@@ -107,7 +113,10 @@ const Dashboard = () => {
         <div className={styles.petRowTxt}>AGE</div>
         <div>DELETE</div>
       </div>
-      {pets.map((element) => (
+
+      { noPet ?
+      (<div>NO PETS</div>):
+      pets.map((element) => (
         <div key={element.id} className={styles.petRow}>
           <div>{element.name}</div>
           <div>{element.breed}</div>
@@ -115,8 +124,9 @@ const Dashboard = () => {
           <div>
             <img src={deleteIcon} alt="Delete" className={styles.iconTrash} onClick={()=>deleteDog(element.id)} />
           </div>
-        </div>
-      ))}
+        </div>)
+      )}
+
       <div className={styles.petsAddBtn}>
         <div className={styles.petsAddText} >- Add new dog...</div>
         <div className={styles.petsAddPlus} onClick={()=>modalHandler()}>+</div>

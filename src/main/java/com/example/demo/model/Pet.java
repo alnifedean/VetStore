@@ -64,4 +64,7 @@ public class Pet {
     public void setUser(User user) {
         this.user = user;
     }
+    public long getUserId() {
+        return user.getId();
+    }
 }
