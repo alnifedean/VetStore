@@ -39,16 +39,18 @@ const Dashboard = () => {
           method: 'GET',
           headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") }
         });
-        if (!response.ok) {
-          throw new Error("response not ok!!");
-        }
-
-        const petsData = await response.json();
-        if (!petsData || petsData.length === 0) { 
+        
+        if (response.status === 204) { 
           setNoPet(true);
-      } else {
-        setPets(petsData);
-      }
+          return;
+        } else if (!response.ok){
+          throw new Error("response not ok!!");
+        } else {
+          setNoPet(false);
+          const petsData = await response.json();
+          setPets(petsData);
+        }
+        
     } catch (error) {
       console.error('Error:', error);
       alert('Error connecting to the server');
@@ -82,6 +84,7 @@ const Dashboard = () => {
       alert('Error connecting to the server');
     } finally {
       setIsLoading(false);
+      setNoPet(true)
     }
   };
 

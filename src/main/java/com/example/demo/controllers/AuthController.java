@@ -1,12 +1,13 @@
 package com.example.demo.controllers;
 
 import com.example.demo.model.User;
-import com.example.demo.dto.AuthResponse;
 import com.example.demo.respository.UserRepository;
 import com.example.demo.utils.JWTUtil;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,15 +39,14 @@ public class AuthController {
             boolean userVerified = argon2.verify(hashedPassword, user.getPassword().toCharArray());
 
             if (userVerified){
-
                 String token = jwtUtil.create(String.valueOf(authUser.getId()), authUser.getEmail());
 
-                return ResponseEntity.ok(new AuthResponse(authUser, token));
+                HttpHeaders headers = new HttpHeaders();
+                headers.set(HttpHeaders.AUTHORIZATION, token);
+                return new ResponseEntity<>(authUser, headers, HttpStatus.OK);
             } else {
                 return ResponseEntity.status(401).body("FAIL");
             }
-
-
         }
         return ResponseEntity.status(401).body("FAIL");
     }

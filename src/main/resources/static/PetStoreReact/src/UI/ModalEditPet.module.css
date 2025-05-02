@@ -88,10 +88,7 @@
   border-radius: 10px;
   font-size: 1.4rem;
 }
-.imageBtn:hover{
-  background-color: #777;
-  font-size: 1.5rem;
-}
+
 
 
 
@@ -103,57 +100,4 @@
   height: 100vh;
   z-index: 10;
   background: rgba(0, 0, 0, 0.75);
-}
-
-@media (max-width: 1000px) {
-  .modalContainer {
-    width: 90%;
-    top: 62%;
-    left: 50%;
-  }
-}
-
-@media (max-width: 768px) {
-  .modalContainer {
-    width: 70%;
-    height: auto;
-    position: absolute;
-    margin-top: 140px;
-  }
-  .formContainer{
-    width: 100%;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-
-  .inputsContainer{
-    margin: 15px;
-    height: 300px;
-    width: 95%;
-    display: flex;
-    justify-content: space-evenly;
-  }
-  .imageContainer{
-    height: 300px;
-    width: 95%;
-    margin: 15px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .imageInputDiv{
-    background-color: #999;
-    width: auto;
-    height: 85%;
-    border-radius: 10px;
-  }
-}
-
-@media (max-width: 481px) {
-  .modalContainer {
-    width: 90%;
-    margin-top: 100px;
-  }
 }
