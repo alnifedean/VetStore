@@ -54,6 +54,11 @@
   display: flex;
   text-align: center;
   justify-self: center;
+  cursor: pointer;
+}
+.petsAddPlus:hover{
+  background-color: #666;
+  border: 3px solid #666;
 }
 
 .petRowTitle{
@@ -78,10 +83,37 @@
   flex-direction: row;
 }
 
-.iconTrash{
+.iconEdit{
   width: 30px;
   height: 30px;
+  cursor: pointer;
 }
+.iconEdit:hover{
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.userSettings{
+  position: fixed;
+  top: 30%;
+  left: 0;
+  background-color: #ccc;
+  width: 70px;
+  height: 50px;
+  border-radius: 0 50px 50px 0;
+  box-shadow: 0 0 5px 0 #fff;
+  cursor: pointer;
+}
+.userSettings:hover{
+  width: 85px;
+  box-shadow: 0 0 15px 0 #fff;
+}
+.userSettingsImg{
+  height: 80%;
+}
+
+
 
 @media (max-width: 481px){
   .petsAddText{

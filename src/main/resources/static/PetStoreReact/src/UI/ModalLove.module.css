@@ -1,6 +1,6 @@
 .mainContainer{
   background-color: #fffe;
-  width: 1000px;
+  width: 80%;
   height: 500px;
   position: fixed;
   z-index: 50;
@@ -105,7 +105,93 @@
   box-shadow: 0 0 8px 2px #fff;
 }
 
+@media (max-width: 1025px){
+  .mainContainer{
+    width: 95%;
+  }
+  .infoP{
+    margin: 0;
+  }
+}
+@media (max-width: 768px) {
+  .mainContainer {
 
+    width: 85%;
+    height: auto; /* ✅ Se adapta al contenido */
+    position: relative; /* ✅ Evita que se quede fijo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* ✅ Ajusta la distribución */
+    padding: 20px;
+    overflow-y: auto; /* ✅ Permite desplazamiento si el contenido es grande */
+  }
+
+  .leftContainer {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .name {
+    font-size: 2rem;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .image {
+    width: 80%;
+    height: auto;
+    max-width: 300px;
+  }
+
+  .rightContainer {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .info {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+
+  .infoP {
+    font-size: 1.2rem;
+  }
+
+  .infoTxt {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+
+  .linkContact {
+    width: 80%;
+    font-size: 1.2rem;
+    padding: 10px;
+  }
+
+  .close {
+    position: absolute; /* ✅ Se acomoda respecto al contenedor */
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+/* @media (max-width: 481px){
+
+} */
 
 
 
@@ -125,3 +211,5 @@
   z-index: 10;
   background: rgba(0, 0, 0, 0.75);
 }
+
+

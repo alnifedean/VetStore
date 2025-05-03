@@ -2,9 +2,12 @@ package com.example.demo.controllers;
 
 import com.example.demo.model.User;
 import com.example.demo.respository.UserRepository;
+import com.example.demo.utils.JWTUtil;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,6 +22,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    JWTUtil jwtUtil;
 
     @PostMapping
     public ResponseEntity<User> addUser(@RequestBody User user){
@@ -50,15 +56,24 @@ public class UserController {
     }
 
     @PutMapping
-    public User modifyUser(@RequestBody User user){
-        User updatedUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found..."));
+    public  ResponseEntity<User> modifyUser(@RequestBody User user, @RequestHeader(value = "Authorization") String token){
+        long userId = Long.parseLong(jwtUtil.getKey(token));
+        User updatedUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
         updatedUser.setFirstName(user.getFirstName());
         updatedUser.setLastName(user.getLastName());
         updatedUser.setEmail(user.getEmail());
         updatedUser.setPhone(user.getPhone());
-        updatedUser.setPassword(user.getPassword());
+
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        String hashedPassword = argon2.hash(1, 1024, 1, user.getPassword());
+        updatedUser.setPassword(hashedPassword);
+
         userRepository.save(updatedUser);
-        return updatedUser;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, token);
+        System.out.println("header: "+headers);
+        return new ResponseEntity<>(updatedUser, headers, HttpStatus.OK);
     }
 
     @PatchMapping

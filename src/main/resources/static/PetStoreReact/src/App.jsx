@@ -4,6 +4,7 @@ import Login from './auth/login/Login'
 import Register from './auth/register/Register'
 import HomeContainer from './HomeContainer'
 import Cupid from './components/Cupid'
+import SettingsUser from './auth/userSettings/SettingsUser'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/love' element={<Cupid />} />
+        <Route path='/settings' element={<SettingsUser />} />
       </Routes>
     </div>
   )
