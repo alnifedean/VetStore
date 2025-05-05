@@ -115,16 +115,15 @@
 }
 @media (max-width: 768px) {
   .mainContainer {
-
     width: 85%;
-    height: auto; /* ✅ Se adapta al contenido */
-    position: relative; /* ✅ Evita que se quede fijo */
+    height: auto;
+    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* ✅ Ajusta la distribución */
+    justify-content: center;
     padding: 20px;
-    overflow-y: auto; /* ✅ Permite desplazamiento si el contenido es grande */
+    overflow-y: auto;
   }
 
   .leftContainer {

@@ -22,9 +22,6 @@ const Backdrop = ({ onConfirm }) =>{
 
 
 
-
-
-
 const ModalOverlay = ({ data, onConfirm }) =>{
 
   const [petData, setPetData] = useState({

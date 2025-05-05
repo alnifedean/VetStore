@@ -1,9 +1,6 @@
 package com.example.demo.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,5 +72,19 @@ public class JWTUtil {
                 .getBody();
 
         return claims.getId();
+    }
+
+    public boolean isValidToken(String jwt){
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(Base64.getDecoder().decode(key)))
+                    .build()
+                    .parseClaimsJws(jwt);
+            return true;
+        } catch (JwtException e){
+            System.out.println("Token invalid: "+e.getMessage());
+            return false;
+        }
+
     }
 }

@@ -5,11 +5,13 @@ import com.example.demo.model.User;
 import com.example.demo.respository.PetRepository;
 import com.example.demo.respository.UserRepository;
 import com.example.demo.utils.JWTUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 
@@ -24,88 +26,159 @@ public class PetController {
     @Autowired
     JWTUtil jwtUtil;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Pet> addPet(@RequestBody Pet pet, @PathVariable Long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found..."));
-        pet.setUser(user);
-        petRepository.save(pet);
+    @PostMapping
+    public ResponseEntity<Pet> addPet(@Valid @RequestBody Pet pet, BindingResult result, @RequestHeader(value = "Authorization") String token){
+        try {
+            if (result.hasErrors()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(pet);
+            }
+            boolean validToken = jwtUtil.isValidToken(token);
+            if (validToken) {
+                long userId = Long.parseLong(jwtUtil.getKey(token));
+                User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
+                pet.setUser(user);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{pet}")
-                .buildAndExpand(pet.getName())
-                .toUri();
+                petRepository.save(pet);
 
-        return ResponseEntity.created(location).body(pet);
-    }
+                URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{pet}")
+                        .buildAndExpand(pet.getName())
+                        .toUri();
 
-    @GetMapping
-    public ResponseEntity<List<Pet>> getAllPets() {
-        List<Pet> pets = petRepository.findAll();
-        if (pets.isEmpty()) {
-            return ResponseEntity.noContent().build();
+                return ResponseEntity.created(location).body(pet);
+            } else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+        } catch (NumberFormatException e){
+            System.out.println("Invalid user ID format. "+e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (RuntimeException e){
+            System.out.println("Pet or user does not exist: "+e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e){
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(pets);
-    }
-
-    @GetMapping("/{id}")
-    public Pet getPet(@PathVariable Long id){
-        return petRepository.findById(id).orElseThrow(() -> new RuntimeException("Pet not found..."));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Pet>> getPetsById(@RequestHeader(value = "Authorization") String token){
-
-        long userId = Long.parseLong(jwtUtil.getKey(token));
-
-        List<Pet> pets = petRepository.findByUser_Id(userId);
-        if (pets.isEmpty()) {
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<List<Pet>> getAllPets(@RequestHeader(value = "Authorization")String token) {
+        try {
+            boolean tokenValid = jwtUtil.isValidToken(token);
+            if (tokenValid){
+                List<Pet> pets = petRepository.findAll();
+                if (pets.isEmpty()) {
+                    return ResponseEntity.noContent().build();}
+                return ResponseEntity.ok(pets);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (Exception e){
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(pets);
+    }
+
+    @GetMapping("/{petId}")
+    public ResponseEntity<Pet> getPet(@PathVariable Long petId, @RequestHeader(value = "Authorization")String token){
+        try {
+            boolean validToken = jwtUtil.isValidToken(token);
+            if (!validToken){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            long userId = Long.parseLong(jwtUtil.getKey(token));
+            Pet pet = petRepository.findById(petId).orElseThrow(() -> new RuntimeException("Pet not found..."));
+            if (userId==pet.getUserId()) {
+                return ResponseEntity.ok(pet);
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        } catch (NumberFormatException e){
+            System.out.println("Invalid user ID format. "+e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (RuntimeException e) {
+            System.out.println("No pet found: "+e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Pet>> getPetsById(@RequestHeader(value = "Authorization") String token) {
+        try {
+            boolean validToken = jwtUtil.isValidToken(token);
+            if (!validToken) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            long userId = Long.parseLong(jwtUtil.getKey(token));
+            List<Pet> pets = petRepository.findByUser_Id(userId);
+            if (pets.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(pets);
+        } catch (NumberFormatException e){
+            System.out.println("Invalid user ID format. "+e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping
-    public Pet modifyPet(@RequestBody Pet pet){
-        Pet updatedPet = petRepository.findById(pet.getId()).orElseThrow(() -> new RuntimeException("Pet not found..."));
-        updatedPet.setName(pet.getName());
-        updatedPet.setBreed(pet.getBreed());
-        updatedPet.setAgeYears(pet.getAgeYears());
-        petRepository.save(updatedPet);
-        return updatedPet;
-    }
+    public ResponseEntity<Pet> modifyPet(@RequestBody Pet pet, @RequestHeader(value = "Authorization")String token){
+        try {
+            boolean validToken = jwtUtil.isValidToken(token);
+            if (!validToken) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
 
-    @PatchMapping
-    public Pet updatePetPartial(@RequestBody Pet pet){
-        Pet updatedPet = petRepository.findById(pet.getId()).orElseThrow(() -> new RuntimeException("User not found..."));
-        boolean change = false;
+            long userId = Long.parseLong(jwtUtil.getKey(token));
+            Pet updatedPet = petRepository.findById(pet.getId()).orElseThrow(() -> new RuntimeException("Pet not found..."));
 
-        if(!pet.getName().isEmpty() && pet.getName() != null){
-            updatedPet.setName(pet.getName());
-            change=true;}
-        if(!pet.getBreed().isEmpty() && pet.getBreed() != null){
-            updatedPet.setBreed(pet.getBreed());
-            change=true;}
-        if(pet.getAgeYears()<1 && pet.getAgeYears() != null){
-            updatedPet.setAgeYears(pet.getAgeYears());
-            change=true;}
+            if (userId!=updatedPet.getUserId()){return ResponseEntity.status(HttpStatus.FORBIDDEN).body(pet);}
+            if (pet.getName() != null && !pet.getName().isEmpty()) {updatedPet.setName(pet.getName());}
+            if (pet.getBreed() != null && !pet.getBreed().isEmpty()) {updatedPet.setBreed(pet.getBreed());}
+            if (pet.getAgeYears() != null && pet.getAgeYears() > 0) {updatedPet.setAgeYears(pet.getAgeYears());}
 
-        if(change){
             petRepository.save(updatedPet);
-            return updatedPet;
-        } else {throw new RuntimeException("All fields are empty or invalid...");}
+            return ResponseEntity.ok(updatedPet);
+        } catch (NumberFormatException e){
+            System.out.println("Invalid user ID format. "+e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (RuntimeException e) {
+            System.out.println("No pet found: "+e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePet(@PathVariable Long id, @RequestHeader(value = "Authorization") String token){
-        long userId = Long.parseLong(jwtUtil.getKey(token));
-        Pet deletedPet = petRepository.findById(id).orElseThrow(() -> new RuntimeException("Pet not found..."));
+    @DeleteMapping("/{petId}")
+    public ResponseEntity<String> deletePet(@PathVariable Long petId, @RequestHeader(value = "Authorization") String token){
+        try {
+            boolean validToken = jwtUtil.isValidToken(token);
 
-        if(userId==deletedPet.getUserId()){
-            petRepository.delete(deletedPet);
-            return ResponseEntity.ok("Pet deleted...");
-        } else {
-            throw new RuntimeException("All fields are empty or invalid...");
+            if (!validToken){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need to login");}
+
+            long userId = Long.parseLong(jwtUtil.getKey(token));
+            Pet deletedPet = petRepository.findById(petId).orElseThrow(() -> new RuntimeException("Pet not found..."));
+
+            if(userId==deletedPet.getUserId()){
+                petRepository.delete(deletedPet);
+                return ResponseEntity.ok("Pet deleted...");
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not the owner of this pet.");
+            }
+        } catch (NumberFormatException e){
+            System.out.println("Invalid user ID format. "+e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user ID format. ");
+        } catch (RuntimeException e) {
+            System.out.println("No pet found: "+e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No pet found");
+        } catch (Exception e) {
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error");
         }
     }
 }

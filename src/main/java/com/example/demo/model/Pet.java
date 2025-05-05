@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -17,7 +18,7 @@ public class Pet {
     @NotBlank
     @Column
     private String breed;
-    @NotBlank
+    @Min(value = 1)
     @Column
     private Integer ageYears;
     @ManyToOne(fetch = FetchType.EAGER)
