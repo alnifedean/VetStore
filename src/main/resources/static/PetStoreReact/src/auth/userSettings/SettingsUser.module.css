@@ -1,0 +1,131 @@
+.mainContainer {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 400px;
+  height: 400px;
+  margin-top: 40px;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 #fff;
+}
+
+.titleContainer{
+  border: 1px solid #fff;
+  border-radius: 5px;
+  width: 60%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 15px;
+  height: 300px;
+}
+
+.titleContainerH2{margin: auto;}
+
+.formContainer{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 60%;
+  margin-bottom: 5px;
+}
+
+.formContainerLabel{
+  align-self: flex-start;
+  margin-left: 5px;
+}
+
+.formContainerInput{
+  width: 95%;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.mainContainerButton{
+  border: 1px solid #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 60%;
+  height: 200px;
+  background-color: black;
+}
+
+.mainContainerButton:hover{
+  border: 1px solid #00f;
+  color: #aaa;
+  cursor: pointer;
+  box-shadow: 0 0 2px 0px #00f;
+}
+
+.mainContanierA{
+  color: #00f;
+  display: inline-block;
+  cursor: pointer;
+  margin: 3px;
+  text-decoration: none;
+}
+
+.mainContanierA:hover{
+  transform: scale(1.2);
+}
+
+.homeBtn{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 60px;
+  margin-top: 20px;
+  display: flex;
+  align-items: start;
+}
+
+.homeBtnImg{
+  background-color: #242424;
+  height: 60px;
+  width: 60px;
+  padding: 0 25px 0 15px;
+  border-radius: 0 50px 50px 0;
+  box-shadow: 0 0 10px 2px #fff;
+}
+
+.homeBtnImg:hover{
+  padding: 0 25px 0 25px;
+}
+
+
+@media (max-width: 1000px){
+  .mainContainer{
+    width: 50%;
+  }
+}
+
+@media (max-width: 768px){
+  .mainContainer{
+    margin-top: 100px;
+    width: 90%;
+    box-shadow: 0 0 8px 0 #fff;
+  }
+
+  .homeBtn{
+    position: absolute;
+    height: 60px;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 0 8px 4px #fff;
+  }
+
+  .homeBtn:hover{
+    height: 65px;
+  }
+
+  .homeBtnImg{
+    height: 60px;
+    width: 60px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}

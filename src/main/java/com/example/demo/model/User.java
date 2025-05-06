@@ -18,6 +18,7 @@ public class User {
     @NotBlank(message = "The last name can not be empty or null")
     @Column(length = 50)
     private String lastName;
+    @NotBlank(message = "The email can not be empty or null")
     @Email(message = "The email need to be valid")
     @Column(length = 50)
     private String email;
@@ -25,7 +26,7 @@ public class User {
     @Column(length = 15)
     private String phone;
     @NotBlank(message = "The password can not be empty or null")
-    @Column(length = 100)
+    @Column(length = 256)
     private String password;
 
 

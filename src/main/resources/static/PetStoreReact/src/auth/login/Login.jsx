@@ -36,11 +36,14 @@ const Login = () => {
           body: JSON.stringify(data)
         });
 
-        if (response.ok) {
+        const token = response.headers.get('Authorization');
+
+        
+        if (token) {
           const responseData = await response.json();
 
-          localStorage.setItem('token', responseData.token);
-          localStorage.setItem('user', JSON.stringify(responseData.user));
+          localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(responseData));
           navigate('/dashboard');
         } else {
           alert('Login unsuccessful...');

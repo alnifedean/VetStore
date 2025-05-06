@@ -1,6 +1,8 @@
 import styles from './Dashboard.module.css'
-import deleteIcon from '../UI/images/borrar.png'
+import settIcon from '../UI/images/ajuste.png'
+import userSetting from '../UI/images/userSetting.png'
 import Modal from '../UI/ModalPet.jsx';
+import ModalSettings from '../UI/ModalSettings.jsx';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,7 +11,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [pets, setPets] = useState([]);
   const [newPet, setNewPet] = useState(null);
-  const [noPet, setNoPet] = useState(false);
+  const [noPet, setNoPet] = useState(null);
+  const [settingPet, setSettingPet] = useState(null);
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
   const navigate = useNavigate();
   const signed = localStorage.getItem("token");
@@ -32,23 +35,24 @@ const Dashboard = () => {
       return;
     }  
 
-
     try {
       const response = await fetch(
         `http://localhost:8080/system/api/v1/pet/all`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") }
         });
-        if (!response.ok) {
-          throw new Error("response not ok!!");
-        }
-
-        const petsData = await response.json();
-        if (!petsData || petsData.length === 0) { 
+        
+        if (response.status === 204) { 
           setNoPet(true);
-      } else {
-        setPets(petsData);
-      }
+          return;
+        } else if (!response.ok){
+          throw new Error("response not ok!!");
+        } else {
+          setNoPet(false);
+          const petsData = await response.json();
+          setPets(petsData);
+        }
+        
     } catch (error) {
       console.error('Error:', error);
       alert('Error connecting to the server');
@@ -57,33 +61,6 @@ const Dashboard = () => {
     }
   };
 
-
-
-  const deleteDog = async (petId) => {
-
-    const confirmDelete = window.confirm("Are you sure you want to delete this pet?");
-  
-    if (!confirmDelete) {return;}
-    
-    setIsLoading(true);
-    try {
-      const response = await fetch(`http://localhost:8080/system/api/v1/pet/${petId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete pet");
-      }
-      setPets(prevPets => prevPets.filter(pet => pet.id !== petId));
-
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error connecting to the server');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const modalHandler = () =>{
     setNewPet(true)
@@ -91,19 +68,28 @@ const Dashboard = () => {
 
   const closeModal = () =>{
     setNewPet(null)
+    setSettingPet(null)
+    setIsLoading(false);
+    if(pets.length==0){
+      setNoPet(true)
+    } else{
+      setNoPet(null)
+    }
   };
 
   useEffect(() => {
 
     window.scrollTo(0, 0);
-    if (!newPet) {
+    if (!newPet || !settingPet) {
       fetchPets();
     }
-  }, [newPet]);
+  }, [newPet, settingPet]);
   
   return(
     <>
-      
+    <div className={styles.userSettings} onClick={()=>navigate('/settings')}>
+      <img className={styles.userSettingsImg} src={userSetting} alt="User settings" />
+    </div>
       {isLoading ? <div>Loading...</div> : 
       <div className={styles.petsContainer}>
       <h2 className={styles.petsTitle}>My Pets!</h2>
@@ -122,7 +108,7 @@ const Dashboard = () => {
           <div>{element.breed}</div>
           <div className={styles.petRowTxt}>{element.ageYears}</div>
           <div>
-            <img src={deleteIcon} alt="Delete" className={styles.iconTrash} onClick={()=>deleteDog(element.id)} />
+            <img src={settIcon} alt="Delete" className={styles.iconEdit} onClick={()=>setSettingPet(element)} />
           </div>
         </div>)
       )}
@@ -134,6 +120,7 @@ const Dashboard = () => {
     </div>
       }
       {newPet && <Modal onConfirm={closeModal} />}
+      {settingPet && <ModalSettings onConfirm={closeModal} data={settingPet} />}
     </>
   )
 }
