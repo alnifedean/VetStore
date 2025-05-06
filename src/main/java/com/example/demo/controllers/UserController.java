@@ -62,68 +62,99 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers(){
-        if(userRepository.findAll().isEmpty()){throw new RuntimeException("No users...");}
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers(@RequestHeader(value = "Authorization")String token){
+        try {
+            if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+            List<User> allUsers = userRepository.findAll();
+            return ResponseEntity.ok(allUsers);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable long id){
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found..."));
+    public ResponseEntity<User> getUser(@PathVariable long id, @RequestHeader(value = "Authorization")String token){
+        try {
+            if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+            User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found..."));
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e){
+            System.out.println("User does not exist: "+e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e){
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
 
     @PutMapping
     public  ResponseEntity<User> modifyUser(@RequestBody User user, @RequestHeader(value = "Authorization") String token){
-        long userId = Long.parseLong(jwtUtil.getKey(token));
-        User updatedUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
-        updatedUser.setFirstName(user.getFirstName());
-        updatedUser.setLastName(user.getLastName());
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setPhone(user.getPhone());
+        try {
+            if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
 
-        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-        String hashedPassword = argon2.hash(1, 1024, 1, user.getPassword().toCharArray());
-        updatedUser.setPassword(hashedPassword);
+            long userId = Long.parseLong(jwtUtil.getKey(token));
 
-        userRepository.save(updatedUser);
+            User updatedUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, token);
-        System.out.println("header: "+headers);
-        return new ResponseEntity<>(updatedUser, headers, HttpStatus.OK);
-    }
+            if (user.getFirstName()!=null && !user.getFirstName().isEmpty()){updatedUser.setFirstName(user.getFirstName());}
+            if (user.getLastName()!=null && !user.getLastName().isEmpty()){updatedUser.setLastName(user.getLastName());}
+            if (user.getEmail()!=null && !user.getEmail().isEmpty()){
+                Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+                if (existingUser.isPresent() && existingUser.get().getId() != userId){return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();}
+                updatedUser.setEmail(user.getEmail());
+            }
+            if (user.getPhone()!=null && !user.getPhone().isEmpty()){updatedUser.setPhone(user.getPhone());}
 
-    @PatchMapping
-    public User updateUserPartial(@RequestBody User user){
-        User updatedUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found..."));
-        boolean change = false;
+            if (user.getPassword()!=null && !user.getPassword().isEmpty()){
+            Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+            String hashedPassword = argon2.hash(1, 1024, 1, user.getPassword().toCharArray());
+            updatedUser.setPassword(hashedPassword);}
 
-        if(!user.getFirstName().isEmpty() && user.getFirstName() != null){
-            updatedUser.setFirstName(user.getFirstName());
-            change=true;}
-        if(!user.getLastName().isEmpty() && user.getLastName() != null){
-            updatedUser.setLastName(user.getLastName());
-            change=true;}
-        if(!user.getEmail().isEmpty() && user.getEmail() != null){
-            updatedUser.setEmail(user.getEmail());
-            change=true;}
-        if(!user.getPhone().isEmpty() && user.getPhone() != null){
-            updatedUser.setPhone(user.getPhone());
-            change=true;}
-        if(!user.getPassword().isEmpty() && user.getPassword() != null){
-            updatedUser.setPassword(user.getPassword());
-            change=true;}
-
-        if(change){
             userRepository.save(updatedUser);
-        return updatedUser;
-        } else {throw new RuntimeException("All fields are empty or invalid...");}
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.AUTHORIZATION, token);
+            return new ResponseEntity<>(updatedUser, headers, HttpStatus.OK);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid token ID format: " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid argument: " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (RuntimeException e){
+            System.out.println("User does not exist: "+e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e){
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public User deleteUser(@PathVariable long id){
-        User deletedUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found..."));
-        userRepository.delete(deletedUser);
-        return deletedUser;
+    @DeleteMapping
+    public ResponseEntity<User> deleteUser(@RequestHeader(value = "Authorization")String token){
+        try {
+            if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+            long userId = Long.parseLong(jwtUtil.getKey(token));
+            User deletedUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
+
+            if (deletedUser.getId()!=userId){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+            userRepository.delete(deletedUser);
+            return ResponseEntity.ok(deletedUser);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid token ID format: " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid argument: " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (RuntimeException e){
+            System.out.println("User does not exist: "+e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e){
+            System.out.println("Unexpected error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
