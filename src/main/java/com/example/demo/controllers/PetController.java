@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.PetResponse;
 import com.example.demo.model.Pet;
 import com.example.demo.model.User;
 import com.example.demo.respository.PetRepository;
@@ -27,10 +28,10 @@ public class PetController {
     JWTUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity<Pet> addPet(@Valid @RequestBody Pet pet, BindingResult result, @RequestHeader(value = "Authorization") String token){
+    public ResponseEntity<PetResponse> addPet(@Valid @RequestBody Pet pet, BindingResult result, @RequestHeader(value = "Authorization") String token){
         try {
             if (result.hasErrors()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(pet);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new PetResponse(pet));
             }
             boolean validToken = jwtUtil.isValidToken(token);
             if (validToken) {
@@ -42,11 +43,11 @@ public class PetController {
 
                 URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .path("/{pet}")
-                        .buildAndExpand(pet.getName())
+                        .path("/{id}")
+                        .buildAndExpand(pet.getId())
                         .toUri();
 
-                return ResponseEntity.created(location).body(pet);
+                return ResponseEntity.created(location).body(new PetResponse(pet));
             } else {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
         } catch (NumberFormatException e){
             System.out.println("Invalid user ID format. "+e);
@@ -61,14 +62,18 @@ public class PetController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Pet>> getAllPets(@RequestHeader(value = "Authorization")String token) {
+    public ResponseEntity<List<PetResponse>> getAllPets(@RequestHeader(value = "Authorization")String token) {
         try {
             boolean tokenValid = jwtUtil.isValidToken(token);
             if (tokenValid){
                 List<Pet> pets = petRepository.findAll();
-                if (pets.isEmpty()) {
-                    return ResponseEntity.noContent().build();}
-                return ResponseEntity.ok(pets);
+                if (pets.isEmpty()) {return ResponseEntity.noContent().build();}
+
+                List<PetResponse> petResponses = pets.stream()
+                        .map(PetResponse::new)
+                        .toList();
+
+                return ResponseEntity.ok(petResponses);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -79,7 +84,7 @@ public class PetController {
     }
 
     @GetMapping("/{petId}")
-    public ResponseEntity<Pet> getPet(@PathVariable Long petId, @RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<PetResponse> getPet(@PathVariable Long petId, @RequestHeader(value = "Authorization")String token){
         try {
             boolean validToken = jwtUtil.isValidToken(token);
             if (!validToken){
@@ -88,7 +93,7 @@ public class PetController {
             long userId = Long.parseLong(jwtUtil.getKey(token));
             Pet pet = petRepository.findById(petId).orElseThrow(() -> new RuntimeException("Pet not found..."));
             if (userId==pet.getUserId()) {
-                return ResponseEntity.ok(pet);
+                return ResponseEntity.ok(new PetResponse(pet));
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
@@ -105,7 +110,7 @@ public class PetController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pet>> getPetsById(@RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<List<PetResponse>> getPetsById(@RequestHeader(value = "Authorization") String token) {
         try {
             boolean validToken = jwtUtil.isValidToken(token);
             if (!validToken) {
@@ -116,7 +121,12 @@ public class PetController {
             if (pets.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }
-            return ResponseEntity.ok(pets);
+
+            List<PetResponse> petResponses = pets.stream()
+                    .map(PetResponse::new)
+                    .toList();
+
+            return ResponseEntity.ok(petResponses);
         } catch (NumberFormatException e){
             System.out.println("Invalid user ID format. "+e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -127,7 +137,7 @@ public class PetController {
     }
 
     @PutMapping
-    public ResponseEntity<Pet> modifyPet(@RequestBody Pet pet, @RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<PetResponse> modifyPet(@RequestBody Pet pet, @RequestHeader(value = "Authorization")String token){
         try {
             boolean validToken = jwtUtil.isValidToken(token);
             if (!validToken) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
@@ -135,13 +145,13 @@ public class PetController {
             long userId = Long.parseLong(jwtUtil.getKey(token));
             Pet updatedPet = petRepository.findById(pet.getId()).orElseThrow(() -> new RuntimeException("Pet not found..."));
 
-            if (userId!=updatedPet.getUserId()){return ResponseEntity.status(HttpStatus.FORBIDDEN).body(pet);}
+            if (userId!=updatedPet.getUserId()){return ResponseEntity.status(HttpStatus.FORBIDDEN).build();}
             if (pet.getName() != null && !pet.getName().isEmpty()) {updatedPet.setName(pet.getName());}
             if (pet.getBreed() != null && !pet.getBreed().isEmpty()) {updatedPet.setBreed(pet.getBreed());}
             if (pet.getAgeYears() != null && pet.getAgeYears() > 0) {updatedPet.setAgeYears(pet.getAgeYears());}
 
             petRepository.save(updatedPet);
-            return ResponseEntity.ok(updatedPet);
+            return ResponseEntity.ok(new PetResponse(updatedPet));
         } catch (NumberFormatException e){
             System.out.println("Invalid user ID format. "+e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

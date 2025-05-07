@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.UserResponse;
 import com.example.demo.model.User;
 import com.example.demo.respository.UserRepository;
 import com.example.demo.utils.JWTUtil;
@@ -47,7 +48,7 @@ public class UserController {
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(user.getFirstName())
+                    .buildAndExpand(user.getId())
                     .toUri();
 
             return ResponseEntity.created(location).body("User created!!!");
@@ -74,11 +75,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable long id, @RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<UserResponse> getUser(@PathVariable long id, @RequestHeader(value = "Authorization")String token){
         try {
             if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
             User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found..."));
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(new UserResponse(user));
         } catch (RuntimeException e){
             System.out.println("User does not exist: "+e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -90,7 +91,7 @@ public class UserController {
 
 
     @PutMapping
-    public  ResponseEntity<User> modifyUser(@RequestBody User user, @RequestHeader(value = "Authorization") String token){
+    public  ResponseEntity<UserResponse> modifyUser(@RequestBody User user, @RequestHeader(value = "Authorization") String token){
         try {
             if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
 
@@ -116,7 +117,7 @@ public class UserController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.AUTHORIZATION, token);
-            return new ResponseEntity<>(updatedUser, headers, HttpStatus.OK);
+            return new ResponseEntity<>(new UserResponse(updatedUser), headers, HttpStatus.OK);
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid token ID format: " + e);
@@ -134,7 +135,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<User> deleteUser(@RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<UserResponse> deleteUser(@RequestHeader(value = "Authorization")String token){
         try {
             if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
             long userId = Long.parseLong(jwtUtil.getKey(token));
@@ -142,7 +143,8 @@ public class UserController {
 
             if (deletedUser.getId()!=userId){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
             userRepository.delete(deletedUser);
-            return ResponseEntity.ok(deletedUser);
+            return ResponseEntity.ok(new UserResponse(deletedUser));
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid token ID format: " + e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

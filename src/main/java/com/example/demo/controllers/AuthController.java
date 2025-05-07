@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.UserResponse;
 import com.example.demo.model.User;
 import com.example.demo.respository.UserRepository;
 import com.example.demo.utils.JWTUtil;
@@ -39,7 +40,7 @@ public class AuthController {
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.set(HttpHeaders.AUTHORIZATION, token);
-                return new ResponseEntity<>(storagedUser, headers, HttpStatus.OK);
+                return new ResponseEntity<>(new UserResponse(storagedUser), headers, HttpStatus.OK);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }
