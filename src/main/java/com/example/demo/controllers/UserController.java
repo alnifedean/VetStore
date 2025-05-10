@@ -1,10 +1,9 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.UserResponse;
 import com.example.demo.model.User;
-import com.example.demo.respository.UserRepository;
+import com.example.demo.service.UserService;
 import com.example.demo.utils.JWTUtil;
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,10 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -25,32 +22,25 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
-
+    private JWTUtil jwtUtil;
     @Autowired
-    JWTUtil jwtUtil;
+    private UserService userService;
 
     @PostMapping
     public ResponseEntity<String> addUser(@Valid @RequestBody User user, BindingResult result){
         try {
             if (result.hasErrors()){return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");}
 
-            boolean existingEmail = userRepository.findByEmail(user.getEmail()).isPresent();
-            if (existingEmail) {return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existing email");}
-
-            Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-            String hashedPassword = argon2.hash(1, 1024, 1, user.getPassword().toCharArray());
-            user.setPassword(hashedPassword);
-
-            userRepository.save(user);
+            User savedUser = userService.addUser(user);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(user.getFirstName())
+                    .buildAndExpand(user.getId())
                     .toUri();
 
             return ResponseEntity.created(location).body("User created!!!");
+
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Database constraint violated");
         } catch (IllegalArgumentException e) {
@@ -65,7 +55,7 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers(@RequestHeader(value = "Authorization")String token){
         try {
             if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
-            List<User> allUsers = userRepository.findAll();
+            List<User> allUsers = userService.getAllUsers();
             return ResponseEntity.ok(allUsers);
 
         } catch (Exception e) {
@@ -74,11 +64,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable long id, @RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<UserResponse> getUser(@PathVariable long id, @RequestHeader(value = "Authorization")String token){
         try {
             if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
-            User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found..."));
-            return ResponseEntity.ok(user);
+            User user = userService.getUserById(id).orElseThrow(() -> new RuntimeException("User not found..."));
+            return ResponseEntity.ok(new UserResponse(user));
         } catch (RuntimeException e){
             System.out.println("User does not exist: "+e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -90,39 +80,23 @@ public class UserController {
 
 
     @PutMapping
-    public  ResponseEntity<User> modifyUser(@RequestBody User user, @RequestHeader(value = "Authorization") String token){
+    public  ResponseEntity<UserResponse> modifyUser(@RequestBody User user, @RequestHeader(value = "Authorization") String token){
         try {
-            if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+            if (!jwtUtil.isValidToken(token)) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+            Long userId = Long.parseLong(jwtUtil.getKey(token));
 
-            long userId = Long.parseLong(jwtUtil.getKey(token));
-
-            User updatedUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
-
-            if (user.getFirstName()!=null && !user.getFirstName().isEmpty()){updatedUser.setFirstName(user.getFirstName());}
-            if (user.getLastName()!=null && !user.getLastName().isEmpty()){updatedUser.setLastName(user.getLastName());}
-            if (user.getEmail()!=null && !user.getEmail().isEmpty()){
-                Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-                if (existingUser.isPresent() && existingUser.get().getId() != userId){return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();}
-                updatedUser.setEmail(user.getEmail());
-            }
-            if (user.getPhone()!=null && !user.getPhone().isEmpty()){updatedUser.setPhone(user.getPhone());}
-
-            if (user.getPassword()!=null && !user.getPassword().isEmpty()){
-            Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-            String hashedPassword = argon2.hash(1, 1024, 1, user.getPassword().toCharArray());
-            updatedUser.setPassword(hashedPassword);}
-
-            userRepository.save(updatedUser);
+            User updatedUser = userService.updateUser(userId, user);
 
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.AUTHORIZATION, token);
-            return new ResponseEntity<>(updatedUser, headers, HttpStatus.OK);
+
+            return new ResponseEntity<>(new UserResponse(updatedUser), headers, HttpStatus.OK);
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid token ID format: " + e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid argument: " + e);
+            System.out.println("Email already in use: " + e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (RuntimeException e){
             System.out.println("User does not exist: "+e);
@@ -134,15 +108,15 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<User> deleteUser(@RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<String> deleteUser(@RequestHeader(value = "Authorization")String token){
         try {
             if (!jwtUtil.isValidToken(token)){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
             long userId = Long.parseLong(jwtUtil.getKey(token));
-            User deletedUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
 
-            if (deletedUser.getId()!=userId){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
-            userRepository.delete(deletedUser);
-            return ResponseEntity.ok(deletedUser);
+            userService.deleteUser(userId);
+
+            return ResponseEntity.ok().body("User deleted...");
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid token ID format: " + e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
