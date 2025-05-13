@@ -16,16 +16,30 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * Controller responsible for managing user operations.
+ * Provides endpoints for user registration, retrieval, modification, and deletion.
+ * Requires authentication via JWT token for most actions.
+ */
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:5174")
 public class UserController {
 
+    /** Utility for JWT authentication and token validation. */
     @Autowired
     private JWTUtil jwtUtil;
+    /** Service layer for user management operations. */
     @Autowired
     private UserService userService;
 
+    /**
+     * Registers a new user in the system.
+     *
+     * @param user The user data to be stored.
+     * @param result Validation results for request data.
+     * @return ResponseEntity containing confirmation or error status.
+     */
     @PostMapping
     public ResponseEntity<String> addUser(@Valid @RequestBody User user, BindingResult result){
         try {
@@ -51,6 +65,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Retrieves all registered users.
+     * Requires authentication.
+     *
+     * @param token Authorization token from the request header.
+     * @return List of all users or appropriate error status.
+     */
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(@RequestHeader(value = "Authorization")String token){
         try {
@@ -63,6 +84,14 @@ public class UserController {
         }
     }
 
+    /**
+     * Retrieves a specific user by ID.
+     * Requires authentication.
+     *
+     * @param id The user ID.
+     * @param token Authorization token from the request header.
+     * @return The user details or an appropriate error status.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable long id, @RequestHeader(value = "Authorization")String token){
         try {
@@ -78,7 +107,14 @@ public class UserController {
         }
     }
 
-
+    /**
+     * Updates user information.
+     * Generates a new authentication token upon successful update.
+     *
+     * @param user The updated user data.
+     * @param token Authorization token from the request header.
+     * @return Updated user details with a new authentication token or error status.
+     */
     @PutMapping
     public  ResponseEntity<UserResponse> modifyUser(@RequestBody User user, @RequestHeader(value = "Authorization") String token){
         try {
@@ -87,8 +123,9 @@ public class UserController {
 
             User updatedUser = userService.updateUser(userId, user);
 
+            String newToken = jwtUtil.create(String.valueOf(updatedUser.getId()), updatedUser.getEmail());
             HttpHeaders headers = new HttpHeaders();
-            headers.set(HttpHeaders.AUTHORIZATION, token);
+            headers.set(HttpHeaders.AUTHORIZATION, newToken);
 
             return new ResponseEntity<>(new UserResponse(updatedUser), headers, HttpStatus.OK);
 
@@ -107,6 +144,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Deletes the authenticated user from the system.
+     *
+     * @param token Authorization token from the request header.
+     * @return Success or error status.
+     */
     @DeleteMapping
     public ResponseEntity<String> deleteUser(@RequestHeader(value = "Authorization")String token){
         try {

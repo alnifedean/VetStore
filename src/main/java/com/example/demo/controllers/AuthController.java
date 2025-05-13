@@ -12,15 +12,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Authentication controller responsible for handling user login requests.
+ * Generates a JWT token upon successful authentication.
+ */
 @RestController
 public class AuthController {
 
+    /** Utility class for handling JWT operations. */
     @Autowired
     private JWTUtil jwtUtil;
 
+    /** Service layer for authentication logic. */
     @Autowired
     AuthService authService;
 
+    /**
+     * Handles user login requests.
+     * Validates input credentials, authenticates the user, and returns a JWT token.
+     *
+     * @param user The user credentials (email and password).
+     * @return ResponseEntity with user details and JWT token, or an error status.
+     */
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {

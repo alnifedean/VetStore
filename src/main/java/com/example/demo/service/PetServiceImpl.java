@@ -10,14 +10,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the PetService interface.
+ * Handles CRUD operations for pet management, ensuring ownership validation.
+ */
 @Service
 public class PetServiceImpl implements PetService {
 
+    /** Repository for retrieving user data from the database. */
     @Autowired
     UserRepository userRepository;
+    /** Repository for retrieving pet data from the database. */
     @Autowired
     PetRepository petRepository;
 
+    /**
+     * Adds a new pet and assigns it to a specific user.
+     *
+     * @param pet The pet to be added.
+     * @param userId The ID of the user who owns the pet.
+     * @return The saved Pet entity.
+     * @throws RuntimeException If the user is not found.
+     */
     @Override
     public Pet addPet(Pet pet, long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found..."));
@@ -26,6 +40,11 @@ public class PetServiceImpl implements PetService {
         return pet;
     }
 
+    /**
+     * Retrieves all pets in the system.
+     *
+     * @return A list of PetResponse objects containing pet details.
+     */
     @Override
     public List<PetResponse> getAllPets() {
         List<Pet> pets = petRepository.findAll();
@@ -34,11 +53,23 @@ public class PetServiceImpl implements PetService {
                 .toList();
     }
 
+    /**
+     * Retrieves a pet by its unique ID.
+     *
+     * @param id The ID of the pet.
+     * @return An Optional containing the pet if found.
+     */
     @Override
     public Optional<Pet> getPetId(long id) {
         return petRepository.findById(id);
     }
 
+    /**
+     * Retrieves all pets owned by a specific user.
+     *
+     * @param id The user's ID.
+     * @return A list of PetResponse objects representing the user's pets.
+     */
     @Override
     public List<PetResponse> getPetsByUserId(long id) {
 
@@ -49,6 +80,14 @@ public class PetServiceImpl implements PetService {
                 .toList();
     }
 
+    /**
+     * Updates pet information for the authenticated user.
+     *
+     * @param userId The ID of the user who owns the pet.
+     * @param pet The pet entity with updated details.
+     * @return The updated Pet entity.
+     * @throws RuntimeException If the pet does not exist or belongs to another user.
+     */
     @Override
     public Pet updatePet(long userId, Pet pet) {
 
@@ -64,6 +103,13 @@ public class PetServiceImpl implements PetService {
         return updatedPet;
     }
 
+    /**
+     * Deletes a pet from the system, ensuring the requesting user is the owner.
+     *
+     * @param petId The ID of the pet to be deleted.
+     * @param userId The ID of the user who owns the pet.
+     * @throws RuntimeException If the pet does not exist or belongs to another user.
+     */
     @Override
     public void deletePet(long petId, long userId) {
         Pet deletedPet = petRepository.findById(petId).orElseThrow(() -> new RuntimeException("Pet not found..."));

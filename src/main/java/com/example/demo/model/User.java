@@ -4,14 +4,20 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Represents the User entity in the database.
+ * Each user has personal information such as name, email, phone, and password.
+ */
 @Table(name = "user")
 @Entity
 public class User {
 
+    /** Unique identifier for the user */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    /** User attributes */
     @NotBlank(message = "The firs name can not be empty or null")
     @Column(length = 50)
     private String firstName;
@@ -29,10 +35,23 @@ public class User {
     @Column(length = 256)
     private String password;
 
+    /** Constructor */
+    public User(){}
 
+    /** Constructor */
+    public User(String firstName, String lastName, String email, String phone, String password){
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.email=email;
+        this.phone=phone;
+        this.password=password;
+    }
+
+    /** Getters and Setters */
     public long getId() {
         return id;
     }
+    public void setId(Long id){this.id=id;}
 
     public String getFirstName() {
         return firstName;
