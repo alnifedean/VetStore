@@ -14,15 +14,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * Controller for handling pet-related operations.
+ * Provides endpoints to create, retrieve, update, and delete pets.
+ * Requires authentication via JWT token.
+ */
 @RestController
 @RequestMapping("pet")
 public class PetController {
 
+    /** Utility for JWT authentication and token validation. */
     @Autowired
     JWTUtil jwtUtil;
+    /** Service layer for handling pet operations. */
     @Autowired
     PetService petService;
 
+    /**
+     * Adds a new pet for the authenticated user.
+     *
+     * @param pet The pet data to be added.
+     * @param result Validation results for request data.
+     * @param token Authorization token from the request header.
+     * @return ResponseEntity containing the created pet or an error status.
+     * (it has another return that I use for the tests)
+     */
     @PostMapping
     public ResponseEntity<PetResponse> addPet(@Valid @RequestBody Pet pet, BindingResult result, @RequestHeader(value = "Authorization") String token){
         try {
@@ -40,6 +56,7 @@ public class PetController {
                     .toUri();
 
             return ResponseEntity.created(location).body(new PetResponse(savedPet));
+            // return ResponseEntity.status(HttpStatus.CREATED).body(new PetResponse(savedPet));
 
         } catch (NumberFormatException e){
             System.out.println("Invalid user ID format. "+e);
@@ -53,6 +70,13 @@ public class PetController {
         }
     }
 
+    /**
+     * Retrieves all pets in the system.
+     * Accessible only for authenticated users.
+     *
+     * @param token Authorization token from the request header.
+     * @return List of all pets or appropriate error status.
+     */
     @GetMapping("/all")
     public ResponseEntity<List<PetResponse>> getAllPets(@RequestHeader(value = "Authorization")String token) {
         try {
@@ -69,6 +93,13 @@ public class PetController {
         }
     }
 
+    /**
+     * Retrieves a pet by its ID, verifying user ownership.
+     *
+     * @param petId The pet ID.
+     * @param token Authorization token from the request header.
+     * @return The pet details or an appropriate error status.
+     */
     @GetMapping("/{petId}")
     public ResponseEntity<PetResponse> getPet(@PathVariable Long petId, @RequestHeader(value = "Authorization")String token){
         try {
@@ -96,6 +127,12 @@ public class PetController {
         }
     }
 
+    /**
+     * Retrieves all pets belonging to the authenticated user.
+     *
+     * @param token Authorization token from the request header.
+     * @return List of user's pets or appropriate error status.
+     */
     @GetMapping
     public ResponseEntity<List<PetResponse>> getPetsById(@RequestHeader(value = "Authorization") String token) {
         try {
@@ -117,6 +154,13 @@ public class PetController {
         }
     }
 
+    /**
+     * Updates a pet's details for the authenticated user.
+     *
+     * @param pet The updated pet data.
+     * @param token Authorization token from the request header.
+     * @return Updated pet details or appropriate error status.
+     */
     @PutMapping
     public ResponseEntity<PetResponse> modifyPet(@RequestBody Pet pet, @RequestHeader(value = "Authorization")String token){
         try {
@@ -140,6 +184,13 @@ public class PetController {
         }
     }
 
+    /**
+     * Deletes a pet from the authenticated user's collection.
+     *
+     * @param petId The pet ID to delete.
+     * @param token Authorization token from the request header.
+     * @return Success or error status.
+     */
     @DeleteMapping("/{petId}")
     public ResponseEntity<String> deletePet(@PathVariable Long petId, @RequestHeader(value = "Authorization") String token){
         try {
