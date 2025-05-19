@@ -22,7 +22,7 @@ const Backdrop = ({ onConfirm }) => {
 const ModalOverlay = ({ onConfirm, onData }) => {
   return(
     <>
-      <div className={styles.close} onClick={onConfirm}>X</div>
+      
       <div className={styles.mainContainer}>
 
         <div className={styles.leftContainer}>
@@ -31,7 +31,10 @@ const ModalOverlay = ({ onConfirm, onData }) => {
         </div>
 
         <div className={styles.rightContainer}>
-          <h3 className={styles.info}>Information</h3>
+          <div className={styles.titleContainer}>
+            <h3 className={styles.info}>Information</h3>
+            <div className={styles.close} onClick={onConfirm}>X</div>
+          </div>
           <p className={styles.infoP}>{onData.breed}</p>
           <p className={styles.infoP}>{onData.age} years</p>
           <p className={styles.infoP}>{onData.boyGirl}</p>

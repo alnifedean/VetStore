@@ -1,9 +1,11 @@
 import styles from './SettingsUser.module.css'
 import icon from '../../UI/images/imagen2.png'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import iconTrash from '../../UI/images/borrar.png'
 
 const SettingsUser = () => {
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -15,11 +17,12 @@ const SettingsUser = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-
+  // Check if user is logged in, otherwise redirect to login page
   useEffect(() => {
     if (token == null) {
       navigate('/login');
     } else {
+      // Retrieve stored user information from localStorage
       const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
       setFormData({
         firstName: userInfo.firstName,
@@ -31,23 +34,26 @@ const SettingsUser = () => {
     }
   }, []);
 
-
+  // Handle input changes and update state
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle user update request
   const submitChange = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
+      const confirmDelete = window.confirm("Are you sure you want to edit this user?");
+      if(!confirmDelete){return;}
+      // Send update request to backend API
       const response = await fetch('http://localhost:8080/system/api/v1/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json','Authorization':localStorage.getItem("token") },
         body: JSON.stringify(formData)
       });
-
 
       if (response.ok) {
         localStorage.removeItem("token");
@@ -64,37 +70,78 @@ const SettingsUser = () => {
     }
   };
 
+  // Handle user deletion request
+  const submitDelete = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+      if(!confirmDelete){return;}
+      // Send delete request to backend API
+      const response = await fetch('http://localhost:8080/system/api/v1/user', {
+        method: "DELETE",
+        headers: {'Content-Type': 'application/json','Authorization':localStorage.getItem("token")}
+    });
+
+    if (response.ok) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate('/register');
+    }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error connecting with server');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
 
   return (
     <>
-    <div className={styles.homeBtn}><img className={styles.homeBtnImg} src={icon} alt="home" onClick={()=>navigate('/dashboard')} /></div>
-    {!isLoading && 
-      <>
-        <form className={styles.mainContainer} onSubmit={submitChange}>
-          <div className={styles.titleContainer}>
-            <h2 className={styles.titleContainerH2}>Edit user</h2>
-          </div>
-          <div className={styles.formContainer}>
-            <label className={styles.formContainerLabel}>Name</label>
-            <input className={styles.formContainerInput} type="text" name="firstName" placeholder="Jane..." value={formData.firstName} onChange={handleChange} />
+      {/* Home button leading back to dashboard */}
+      <div className={styles.homeBtn}><img className={styles.homeBtnImg} src={icon} alt="home" onClick={()=>navigate('/dashboard')} /></div>
+      {/* Display user settings form when not loading */}
+      {!isLoading && 
+        <>
+          <form className={styles.mainContainer} onSubmit={submitChange}>
+            <div className={styles.titleContainer}>
+              <h2 className={styles.titleContainerH2}>Edit user</h2>
+            </div>
+            <div className={styles.formContainer}>
+              {/* First name input field */}
+              <label className={styles.formContainerLabel} htmlFor='firstName'>Name</label>
+              <input className={styles.formContainerInput} type="text" id='firstName' name="firstName" placeholder="Jane..." value={formData.firstName} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Last name</label>
-            <input className={styles.formContainerInput} type="text" name="lastName" placeholder="Doe..." value={formData.lastName} onChange={handleChange} />
+              {/* Last name input field */}
+              <label className={styles.formContainerLabel} htmlFor='lastName'>Last name</label>
+              <input className={styles.formContainerInput} type="text" id='lastName' name="lastName" placeholder="Doe..." value={formData.lastName} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Email</label>
-            <input className={styles.formContainerInput} type="email" name="email" placeholder="email@email.com..." value={formData.email} onChange={handleChange} />
+              {/* Email input field */}
+              <label className={styles.formContainerLabel} htmlFor='email'>Email</label>
+              <input className={styles.formContainerInput} type="email" id='email' name="email" placeholder="email@email.com..." value={formData.email} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Phone</label>
-            <input className={styles.formContainerInput} type="number" name="phone" placeholder="987-654-3210..." value={formData.phone} onChange={handleChange} />
+              {/* Phone input field */}
+              <label className={styles.formContainerLabel} htmlFor='phone'>Phone</label>
+              <input className={styles.formContainerInput} type="number" id='phone' name="phone" placeholder="987-654-3210..." value={formData.phone} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Password</label>
-            <input className={styles.formContainerInput} type="password" name="password" placeholder="Password..." value={formData.password} onChange={handleChange} />
-          </div>
-          <button className={styles.mainContainerButton} type="submit">Submit</button>
-        </form>
-      </>
-    }
-    {isLoading && <div>Loading...</div>}
+              {/* Password input field */}
+              <label className={styles.formContainerLabel} htmlFor='password'>Password</label>
+              <input className={styles.formContainerInput} type="password" id='password' name="password" placeholder="Password..." value={formData.password} onChange={handleChange} />
+            </div>
+            
+            <div className={styles.mainContainerButton}>
+              {/* Submit button for updating user settings */}
+              <button className={styles.submitBtn}  type="submit">Submit</button>
+              {/* Delete button for removing the user account */}
+              <img className={styles.deleteBtn} src={iconTrash} alt="delete user" onClick={(event) => submitDelete(event)} />
+            </div>
+          </form>
+        </>
+      }
+      {/* Show loading message while processing user actions */}
+      {isLoading && <div>Loading...</div>}
     </>
   );
 };
