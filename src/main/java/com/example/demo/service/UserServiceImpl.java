@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.model.User;
+import com.example.demo.respository.PetRepository;
 import com.example.demo.respository.UserRepository;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -19,6 +21,8 @@ public class UserServiceImpl implements UserService {
     /** Repository for retrieving user data from the database. */
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    PetRepository petRepository;
 
     /**
      * Adds a new user to the system.
@@ -94,14 +98,16 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Deletes a user from the system.
+     * Deletes a user from the system and their pets..
      *
      * @param userId The ID of the user to be deleted.
      * @throws RuntimeException If the user does not exist.
      */
+    @Transactional
     @Override
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        petRepository.deleteAllByUser_Id(userId);
         userRepository.delete(user);
     }
 }

@@ -117,6 +117,14 @@
   font-size: 1.1rem;
 }
 
+@media (min-width: 2000px){
+  .Navigation{
+    height: 225px;
+  }
+  .logoContainerLink{
+    justify-content: space-around;
+  }
+}
 @media (max-width: 1100px){
   .logoContainer{
     width: 35%;
@@ -171,5 +179,8 @@
 @media (max-width: 768px){
   .menuContainer{
     display: none;
+  }
+  .logoContainerImgSmall{
+    margin-left: 15px;
   }
 }

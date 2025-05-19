@@ -1,6 +1,6 @@
 div{
+  height: 100%;
   width: 100vw;
-  max-height: 2500px;
   display: flex;
   justify-content: center;
   align-items: center;

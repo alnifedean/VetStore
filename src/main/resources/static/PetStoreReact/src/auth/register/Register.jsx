@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 const Register = () => {
-
+  // State for managing user input fields
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -16,23 +16,26 @@ const Register = () => {
   const navigate = useNavigate();
   const signed = localStorage.getItem("token");
 
+  // Redirect to dashboard if the user is already logged in
   useEffect(() => {
     if (signed !== null) {
       navigate('/dashboard');
     }
   }, []);
 
-
+  // Handle input changes and update state
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle form submission and register user
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
+      // Send registration request to backend API
       const response = await fetch('http://localhost:8080/system/api/v1/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -40,7 +43,7 @@ const Register = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        alert("User added, please log in!! :D")
         navigate('/login');
       } else {
         alert('Error registrating user');
@@ -56,35 +59,44 @@ const Register = () => {
 
   return (
     <>
-    <div className={styles.homeBtn}><img className={styles.homeBtnImg} src={icon} alt="home" onClick={()=>navigate('/home')} /></div>
-    {!isLoading && 
-      <>
-        <form className={styles.mainContainer} onSubmit={handleSubmit}>
-          <div className={styles.titleContainer}>
-            <h2 className={styles.titleContainerH2}>Register</h2>
-          </div>
-          <div className={styles.formContainer}>
-            <label className={styles.formContainerLabel}>Name</label>
-            <input className={styles.formContainerInput} type="text" name="firstName" placeholder="Jane..." value={formData.firstName} onChange={handleChange} />
+      {/* Home button with image leading back to homepage */}
+      <div className={styles.homeBtn}><img className={styles.homeBtnImg} src={icon} alt="home" onClick={()=>navigate('/home')} /></div>
+      {/* Display registration form when not loading */}
+      {!isLoading && 
+        <>
+          <form className={styles.mainContainer} onSubmit={handleSubmit}>
+            <div className={styles.titleContainer}>
+              <h2 className={styles.titleContainerH2}>Register</h2>
+            </div>
+            <div className={styles.formContainer}>
+              {/* First name input field */}
+              <label className={styles.formContainerLabel} htmlFor='firstName'>Name</label>
+              <input className={styles.formContainerInput} type="text" id='firstName' name="firstName" placeholder="Jane..." value={formData.firstName} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Last name</label>
-            <input className={styles.formContainerInput} type="text" name="lastName" placeholder="Doe..." value={formData.lastName} onChange={handleChange} />
+              {/* Last name input field */}
+              <label className={styles.formContainerLabel} htmlFor='lastName'>Last name</label>
+              <input className={styles.formContainerInput} type="text" id='lastName' name="lastName" placeholder="Doe..." value={formData.lastName} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Email</label>
-            <input className={styles.formContainerInput} type="email" name="email" placeholder="email@email.com..." value={formData.email} onChange={handleChange} />
+              {/* Email input field */}
+              <label className={styles.formContainerLabel} htmlFor='email'>Email</label>
+              <input className={styles.formContainerInput} type="email" id='email' name="email" placeholder="email@email.com..." value={formData.email} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Phone</label>
-            <input className={styles.formContainerInput} type="number" name="phone" placeholder="987-654-3210..." value={formData.phone} onChange={handleChange} />
+              {/* Phone input field */}
+              <label className={styles.formContainerLabel} htmlFor='phone'>Phone</label>
+              <input className={styles.formContainerInput} type="number" id='phone' name="phone" placeholder="987-654-3210..." value={formData.phone} onChange={handleChange} />
 
-            <label className={styles.formContainerLabel}>Password</label>
-            <input className={styles.formContainerInput} type="password" name="password" placeholder="Password..." value={formData.password} onChange={handleChange} />
-          </div>
-          <button className={styles.mainContainerButton} type="submit">Submit</button>
-        </form>
-        <p>Have an account? <Link className={styles.mainContanierA} to={'/login'}>Login!</Link></p>
-      </>
-    }
-    {isLoading && <div>Loading...</div>}
+              {/* Password input field */}
+              <label className={styles.formContainerLabel} htmlFor='password'>Password</label>
+              <input className={styles.formContainerInput} type="password" id='password' name="password" placeholder="Password..." value={formData.password} onChange={handleChange} />
+            </div>
+            <button className={styles.mainContainerButton} type="submit">Submit</button>
+          </form>
+          {/* Redirect link for existing users */}
+          <p>Have an account? <Link className={styles.mainContanierA} to={'/login'}>Login!</Link></p>
+        </>
+      }
+      {/* Show loading message while processing registration */}
+      {isLoading && <div>Loading...</div>}
     </>
   );
 };

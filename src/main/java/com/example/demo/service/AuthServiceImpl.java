@@ -6,11 +6,13 @@ import com.example.demo.respository.UserRepository;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementation of the AuthService interface.
  * Handles user authentication and password verification using Argon2 hashing.
  */
+@Service
 public class AuthServiceImpl implements AuthService {
 
     /** Repository for retrieving user information from the database. */

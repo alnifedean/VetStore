@@ -33,13 +33,13 @@ const ModalOverlay = ({ onConfirm }) =>{
     setPetData({ ...petData, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const addPet = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8080/system/api/v1/pet/${userId}`, {
+      const response = await fetch(`http://localhost:8080/system/api/v1/pet`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") },
         body: JSON.stringify(petData)
       });
       alert('Pet added :D')
@@ -52,7 +52,7 @@ const ModalOverlay = ({ onConfirm }) =>{
   
   return(
     <div className={styles.modalContainer}>
-      <form className={styles.formContainer} onSubmit={handleSubmit}>
+      <form className={styles.formContainer} onSubmit={addPet}>
         <div className={styles.inputsContainer}>
           <h2 className={styles.inputsH2}>ADD PET</h2>
           <div className={styles.inputs}>

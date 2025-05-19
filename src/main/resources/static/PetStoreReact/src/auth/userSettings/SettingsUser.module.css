@@ -45,31 +45,39 @@
 }
 
 .mainContainerButton{
-  border: 1px solid #fff;
   border-radius: 5px;
   margin-bottom: 10px;
   width: 60%;
-  height: 200px;
-  background-color: black;
+  height: 60px;
+  background-color: #bbb;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
-.mainContainerButton:hover{
-  border: 1px solid #00f;
-  color: #aaa;
+.submitBtn{
+  height: 80%;
+  width: 70%;
+  background-color: #242424;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 0 2px 0px #00f;
+  font-size: 18px;
+}
+.submitBtn:hover{
+  font-size: 25px;
+  box-shadow: 0 0 5px 3px #fff;
 }
 
-.mainContanierA{
-  color: #00f;
-  display: inline-block;
+.deleteBtn{
+  height: 70%;
   cursor: pointer;
-  margin: 3px;
-  text-decoration: none;
 }
-
-.mainContanierA:hover{
-  transform: scale(1.2);
+.deleteBtn:hover{
+  height: 80%;
+  margin-left: -10px;
+  border: 3px solid #f00;
+  border-radius: 5px;
 }
 
 .homeBtn{
@@ -95,6 +103,76 @@
   padding: 0 25px 0 25px;
 }
 
+@media (min-width: 2000px){
+  .mainContainer{
+    width: 800px;
+    height: 800px;
+    box-shadow: 0 0 15px 2px #fff;
+  }
+  .titleContainer{
+    border: 2px solid #fff;
+    border-radius: 10px;
+    width: 70%;
+    font-size: 2rem;
+    height: 14%;
+  }
+  .formContainer{
+    width: 70%;
+    height: 60%;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .formContainerLabel{
+    align-self: flex-start;
+    margin-bottom: -15px;
+    margin-left: 15px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 95%;
+  }
+  .formContainerInput{
+    height: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+  }
+  .mainContainerButton{
+    border-radius: 10px;
+    width: 70%;
+    height: 14%;
+    background-color: #888;
+  }
+  .submitBtn{
+    border-radius: 10px;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .submitBtn:hover{
+    font-size: 2.5rem;
+  }
+  .deleteBtn{
+    height: 85%;
+  }
+  .deleteBtn:hover{
+    height: 90%;
+  }
+  .homeBtn{
+    height: 100px;
+    margin-top: 100px;
+  }
+  .homeBtnImg{
+    height: 100px;
+    width: 100px;
+    padding: 0 25px 0 25px;
+    border-radius: 0 50px 50px 0;
+    box-shadow: 0 0 15px 2px #fff;
+  }
+  .homeBtnImg:hover{
+    padding: 0 25px 0 35px;
+    box-shadow: 0 0 25px 3px #fff;
+  }
+}
 
 @media (max-width: 1000px){
   .mainContainer{

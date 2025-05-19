@@ -52,7 +52,7 @@
   border-right: 2px solid #0007;
   padding-right: 5px;
 }
-.formImputs{
+.formInputs{
   width: 95%;
 }
 .labelInfo{
@@ -66,9 +66,12 @@
   border: 1px solid #000;
   color: #000;
 }
+.formInputsMsg{
+  width: 95%;
+}
 .inputInfoMsg{
   width: 100%;
-  height: 70px;
+  height: 100%;
   background-color: #fffe;
   border: 1px solid #000;
   color: #000;
@@ -88,8 +91,94 @@
   margin: 0;
   border-radius: 10px;
 }
+@media (min-width: 1900px){
+  .informationH2{
+    font-size: 5rem;
+  }
+  .informationP{
+    font-size: 2rem;
+    font-weight: 500;
+  }
+  .informationMess{
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
 
+  .formInputs{
+    height: 15%;
+    width: 95%;
+  }
+  .labelInfo{
+    font-size: 2rem;
+    height: 50%;
+    margin-bottom: 10px;
+  }
+  .inputInfo{
+    height: 2rem;
+    font-size: 1.8rem;
+    height: 100%;
+  }
+  .formInputsMsg{
+    height: 30%;
+  }
+  .inputInfoMsg{
+    font-size: 2rem;
+    height: 100%;
+  }
+  .inputButton{
+    width: 97%;
+    height: 3rem;
+    font-weight: 600;
+    font-size: 2rem;
+  }
+
+
+  .mapContainer{
+    width: 32%;
+    height: 90%;
+    border: none;
+    margin: 0;
+    border-radius: 10px;
+  }
+
+
+
+
+
+
+}
 @media (max-width: 1050px){
+  .mainContainer{
+    width: 60%;
+    height: auto;
+    margin-top: 20px;
+    margin-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border-radius: 10px;
+    color: black;
+    }
+  .informationContainer{
+    width: 95%;
+    border-right: none;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #0007;
+    padding-bottom: 10px;
+  }
+  .formContainer{
+    width: 95%;
+    border-right: none;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #0007;
+    padding-bottom: 10px;
+  }
+  .mapContainer{
+    width: 95%;
+    border-right: none;
+    height: 400px;
+    padding-bottom: 10px;
+  }
   .informationH2{
     font-size: 2.5rem;
     width: 100%;

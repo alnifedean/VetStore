@@ -105,10 +105,15 @@
   background: rgba(0, 0, 0, 0.75);
 }
 
+@media (min-width: 2000px) {
+  .modalContainer {
+    top: 40%;
+  }
+}
 @media (max-width: 1000px) {
   .modalContainer {
     width: 90%;
-    top: 62%;
+    top: 50%;
     left: 50%;
   }
 }

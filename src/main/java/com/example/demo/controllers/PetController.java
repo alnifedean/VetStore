@@ -139,7 +139,6 @@ public class PetController {
             boolean validToken = jwtUtil.isValidToken(token);
             if (!validToken) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
             long userId = Long.parseLong(jwtUtil.getKey(token));
-
             List<PetResponse> petResponses = petService.getPetsByUserId(userId);
 
             if (petResponses.isEmpty()) {return ResponseEntity.noContent().build();}

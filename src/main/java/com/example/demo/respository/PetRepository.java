@@ -18,4 +18,11 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
      * @return List of pets owned by the given user.
      */
     List<Pet> findByUser_Id(Long userId);
+
+    /**
+     * Deletes all pets associated with a specific user.
+     *
+     * @param userId The ID of the user whose pets should be deleted.
+     */
+    void deleteAllByUser_Id(Long userId); // Cambio a un nombre más claro
 }

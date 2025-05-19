@@ -1,3 +1,4 @@
+import React from "react";
 import styles from './Dashboard.module.css'
 import settIcon from '../UI/images/ajuste.png'
 import userSetting from '../UI/images/userSetting.png'
@@ -37,7 +38,7 @@ const Dashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/system/api/v1/pet/all`, {
+        `http://localhost:8080/system/api/v1/pet`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") }
         });
@@ -88,6 +89,7 @@ const Dashboard = () => {
   return(
     <>
     <div className={styles.userSettings} onClick={()=>navigate('/settings')}>
+      <p className={styles.userSettingsText}>User</p>
       <img className={styles.userSettingsImg} src={userSetting} alt="User settings" />
     </div>
       {isLoading ? <div>Loading...</div> : 

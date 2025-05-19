@@ -6,10 +6,12 @@ import HomeContainer from './HomeContainer'
 import Cupid from './components/Cupid'
 import SettingsUser from './auth/userSettings/SettingsUser'
 
+// Main application component that defines the routing structure
 function App() {
   return (
     <div>
       <Routes>
+        {/* Default route, redirects all unmatched paths to HomeContainer */}
         <Route path='*' element={<HomeContainer />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />

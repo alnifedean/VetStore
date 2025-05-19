@@ -44,7 +44,7 @@ const ModalOverlay = ({ data, onConfirm }) =>{
     try {
       const response = await fetch(`http://localhost:8080/system/api/v1/pet`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") },
         body: JSON.stringify(petData)
       });
       alert('Pet updated :D')
