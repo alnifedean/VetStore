@@ -13,18 +13,21 @@ const Gallery = () => {
 
   const [data, setData] = useState('');
 
+  // Handle image click, set selected image, and scroll to top
   const handleImageClick = (event) => {
     const src = event.target.src;
     setData(src);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Scroll to top when the component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return(
     data===''? (
+      // Display the gallery when no image is selected
       <div className={styles.box}>
         <img className={styles.image} src={adi} onClick={handleImageClick} />
         <img className={styles.image} src={cupi} onClick={handleImageClick} />
@@ -39,10 +42,11 @@ const Gallery = () => {
         <img className={styles.image} src={clas} onClick={handleImageClick} />
         <img className={styles.image} src={hotel} onClick={handleImageClick} />
       </div>):(
+        // Display the selected image in full view
       <div className={styles.singleImageContainer}>
-      <button className={styles.buttonClose} onClick={()=>{setData(''), window.scrollTo({ top: 0, behavior: 'smooth' });}}>X</button>
-      <img className={styles.singleImage} src={data} alt="Imagen seleccionada" />
-    </div>
+        <button className={styles.buttonClose} onClick={()=>{setData(''), window.scrollTo({ top: 0, behavior: 'smooth' });}}>X</button>
+        <img className={styles.singleImage} src={data} alt="Imagen seleccionada" />
+      </div>
     )
   )
 };

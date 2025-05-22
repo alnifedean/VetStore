@@ -2,41 +2,48 @@ import { useState } from 'react';
 import styles from './ModalPet.module.css'
 import { createPortal } from 'react-dom';
 
+// Modal component for adding a new pet
 const Modal = ({ onConfirm }) => {
   return (
     <>
+      {/* Render modal content inside designated second-modal-root in the DOM */}
       {createPortal(<ModalOverlay onConfirm={onConfirm} />,
       document.getElementById('second-modal-root'))}
 
+      {/* Render backdrop outside the modal for closing functionality */}
       {createPortal(<Backdrop onConfirm={onConfirm} />,
       document.getElementById('backdrop-root'))}
     </>
   );
 };
 
+// Backdrop component to allow closing the modal by clicking outside
 const Backdrop = ({ onConfirm }) =>{
   return<div className={styles.backdrop} onClick={onConfirm}></div>;
 };
 
+// ModalOverlay component for adding a new pet
 const ModalOverlay = ({ onConfirm }) =>{
 
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const userId = storedUser?.id;
+  // State for managing pet input fields
   const [petData, setPetData] = useState({
     name: '',
     ageYears: 0,
     breed: '',
   });
-
+  
+  // Handle input changes and update state
   const handleChange = (event) => {
     const { name, value } = event.target;
     setPetData({ ...petData, [name]: value });
   };
 
+  // Function to add a new pet
   const addPet = async (event) => {
     event.preventDefault();
 
     try {
+      // Send pet registration request to backend API
       const response = await fetch(`http://localhost:8080/system/api/v1/pet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization':localStorage.getItem("token") },
@@ -53,6 +60,7 @@ const ModalOverlay = ({ onConfirm }) =>{
   return(
     <div className={styles.modalContainer}>
       <form className={styles.formContainer} onSubmit={addPet}>
+        {/* Input fields for pet information */}
         <div className={styles.inputsContainer}>
           <h2 className={styles.inputsH2}>ADD PET</h2>
           <div className={styles.inputs}>
@@ -66,6 +74,7 @@ const ModalOverlay = ({ onConfirm }) =>{
             <input type="number" className={styles.inputsEach} name='ageYears' value={petData.ageYears} onChange={handleChange} />
           </div>
         </div>
+        {/* Image upload and submission button */}
         <div className={styles.imageContainer}>
           <div className={styles.imageInputDiv}><input type="file" className={styles.imageInput} /></div>
           <button className={styles.imageBtn} type='submit' >Submit</button>

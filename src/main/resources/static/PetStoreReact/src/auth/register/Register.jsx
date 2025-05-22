@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 const Register = () => {
-  // State for managing user input fields
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

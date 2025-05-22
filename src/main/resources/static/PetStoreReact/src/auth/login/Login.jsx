@@ -5,7 +5,7 @@ import icon from '../../UI/images/imagen2.png'
 
 
 const Login = () => {
-  // State for managing user input (email & password)
+
   const [data, setData] = useState({
     email: '',
     password: ''

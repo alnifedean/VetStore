@@ -10,11 +10,13 @@ const Contact = () => {
     message: ""
   });
 
+  // Reset form data and scroll to top when the component mounts
   useEffect(() => {
     setFormData({name: "", email: "", phone: "", message: ""})
     window.scrollTo(0, 0);
   }, []);
 
+  // Handle input changes and update state
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -22,6 +24,7 @@ const Contact = () => {
   return(
     <div className={styles.mainContainer}>
 
+      {/* Contact information section */}
       <div className={styles.informationContainer}>
         <h2 className={styles.informationH2}>Questions?</h2>
         <p className={styles.informationMess}>Send us a message, call us, or visit us!!</p>
@@ -30,6 +33,7 @@ const Contact = () => {
         <p className={styles.informationP}>Ramon Larrainzar #123, San Ramon, San Cristobal de las Casas</p>
       </div>
 
+      {/* Contact form */}
       <form className={styles.formContainer} action="https://formspree.io/f/xwpoyzjg" method="POST">
         <div className={styles.formInputs}>
           <label className={styles.labelInfo} htmlFor="name">Name</label>
@@ -50,6 +54,7 @@ const Contact = () => {
         <button type="submit" className={styles.inputButton}>Send</button>
       </form>
 
+      {/* Embedded Google Maps iframe */}
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d955.182358412129!2d-92.65326656626922!3d16.74034667524846!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ed450f36494fbf%3A0x2abe378ec81cb1ee!2sPROTECAN!5e0!3m2!1sen!2smx!4v1745047947376!5m2!1sen!2smx" className={styles.mapContainer} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
     </div>
   )

@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 
 
 const Services = () => {
+  // List of available services with details
   const servicesList = [
     {"id":1, "title":"Training", "image":adi, "color":'#7fb3d5', "nav":'/training', "text": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur." },
     {"id":2, "title":"DayCare", "image":guard, "color":'#f1948a', "nav":'/dayCare',"text": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus nesciunt explicabo officiis fuga magnam, enim corrupti ut amet magni maiores fugit? Cumque optio minima alias eos earum officia enim aspernatur." },
@@ -25,21 +26,25 @@ const Services = () => {
   const [openService, setOpenService] = useState(null);
   const [service, setService] = useState(null);
 
+  // Open modal and set service details when a service is clicked
   const modalHandler = (element) =>{
     setOpenService('onConfirm')
     setService(element);
   };
 
+  // Close modal
   const closeModal = () =>{
     setOpenService(null)
   };
 
+  // Scroll to top when the component mounts
   useEffect(() => {
       window.scrollTo(0, 0);
   }, []);
 
   return(
     <>
+      {/* Display available services */}
       <div className={styles.servicesContainer}>
         {servicesList.map((element)=>(
           <div className={styles.serviceRows} style={{backgroundColor: element.color}} onClick={() => modalHandler(element)} >
@@ -50,9 +55,8 @@ const Services = () => {
             </div>
           </div>
         ))}
-
       </div>
-
+      {/* Show modal for selected service */}
       {openService && <Modal onConfirm={closeModal} service={service} />}
     </>
   )
